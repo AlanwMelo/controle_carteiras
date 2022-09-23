@@ -1,3 +1,4 @@
+import 'package:controle_carteiras/presentation/openMonth/FIIReserva.dart';
 import 'package:controle_carteiras/presentation/openMonth/stockList.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -27,13 +28,10 @@ class _OpenMonthState extends State<OpenMonth> {
                     Container(
                         margin: myMargin,
                         color: Colors.orangeAccent,
-                        width: 200,
                         child: Column()),
                     Container(
                         margin: myMargin,
-                        color: Colors.cyan,
-                        width: 200,
-                        child: Column()),
+                        child: const FIIReserva()),
                   ],
                 )),
           ],
