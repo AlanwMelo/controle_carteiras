@@ -1,4 +1,4 @@
-import 'package:controle_carteiras/presentation/openMonth.dart';
+import 'package:controle_carteiras/presentation/openMonth/openMonth.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -53,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
               color: Colors.redAccent,
               child: Column(),
             ),
-            Expanded(child: Container(child: OpenMonth()))
+            Expanded(child: OpenMonth())
           ],
         ),
       ),
