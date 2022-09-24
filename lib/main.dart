@@ -30,18 +30,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueGrey.withOpacity(0.2),
+      backgroundColor: Colors.blueAccent.withOpacity(0.2),
       appBar: AppBar(
         centerTitle: true,
         title: Text(widget.title),
@@ -50,10 +42,10 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           Container(
             width: 60,
-            color: Colors.redAccent,
+            color: Colors.blue.withOpacity(0.7),
             child: Column(),
           ),
-          Expanded(child: OpenMonth())
+          const Expanded(child: OpenMonth())
         ],
       ),
     );
