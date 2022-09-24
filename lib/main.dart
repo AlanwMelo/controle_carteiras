@@ -41,21 +41,20 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black.withOpacity(0.6),
       appBar: AppBar(
         centerTitle: true,
         title: Text(widget.title),
       ),
-      body: Container(
-        child: Row(
-          children: [
-            Container(
-              width: 60,
-              color: Colors.redAccent,
-              child: Column(),
-            ),
-            Expanded(child: OpenMonth())
-          ],
-        ),
+      body: Row(
+        children: [
+          Container(
+            width: 60,
+            color: Colors.redAccent,
+            child: Column(),
+          ),
+          Expanded(child: OpenMonth())
+        ],
       ),
     );
   }
