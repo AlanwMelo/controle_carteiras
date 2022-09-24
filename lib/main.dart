@@ -36,16 +36,16 @@ class _MyHomePageState extends State<MyHomePage> {
       backgroundColor: Colors.blueAccent.withOpacity(0.2),
       appBar: AppBar(
         centerTitle: true,
+        backgroundColor: Colors.blue.withOpacity(0.7),
         title: Text(widget.title),
       ),
-      body: Row(
+      body: Column(
         children: [
+          const Expanded(child: OpenMonth()),
           Container(
-            width: 60,
+            height: 50,
             color: Colors.blue.withOpacity(0.7),
-            child: Column(),
           ),
-          const Expanded(child: OpenMonth())
         ],
       ),
     );

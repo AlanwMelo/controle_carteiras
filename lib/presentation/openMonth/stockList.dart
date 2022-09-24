@@ -19,7 +19,7 @@ class _StockListState extends State<StockList> {
           _addButton(),
           _stockLines(
               paper: _leadingText(text: 'Papel'),
-              amount: _leadingText(text: 'Quantidade'),
+              amount: _leadingText(text: 'Qtd.'),
               boughtValue: _leadingText(text: 'Compra'),
               actualPrice: _leadingText(text: 'Atual'),
               dif: _leadingText(text: 'Diferença')),
@@ -45,16 +45,14 @@ class _StockListState extends State<StockList> {
       required Widget boughtValue,
       required Widget actualPrice,
       required Widget dif}) {
-    double columnWidth = 100;
-    double columnPadding = 8;
     Widget divisor = Container(width: 0.5, color: Colors.black);
 
     rows({required Widget child}) {
-      return Container(
-        color: Colors.lightBlueAccent.withOpacity(0.2),
-          padding: EdgeInsets.all(columnPadding),
-          width: columnWidth,
-          child: Center(child: child));
+      return Expanded(
+        child: Container(
+          color: Colors.lightBlueAccent.withOpacity(0.2),
+            child: Center(child: child)),
+      );
     }
 
     return Container(
@@ -82,7 +80,7 @@ class _StockListState extends State<StockList> {
       color: Colors.green,
       child: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
         onPressed: () {  },
-        child: const Text('Adcionar'),
+        child: const Text('Papeis do mês'),
       ),
     );
   }_horizontalDivisor() {

@@ -13,15 +13,24 @@ class _ResumeState extends State<Resume> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 200,
-      height: 350,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      height: 180,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _resumeContainer(),
-          _resumeContainer(),
-          _resumeContainer(),
-          _resumeContainer(),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _resumeContainer(),
+              _resumeContainer(),
+            ],
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _resumeContainer(),
+              _resumeContainer(),
+            ],
+          ),
         ],
       ),
     );
@@ -32,6 +41,7 @@ class _ResumeState extends State<Resume> {
     return BeautifulContainer(
       color: Colors.lightBlueAccent.withOpacity(0.5),
       child: Container(
+        padding: const EdgeInsets.all(4),
         color: Colors.lightBlueAccent.withOpacity(0.2),
         child: Column(
           mainAxisSize: MainAxisSize.min,

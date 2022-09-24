@@ -43,15 +43,15 @@ class _FIIReservaState extends State<FIIReserva> {
     required Widget actualPrice,
   }) {
     double columnWidth = 100;
-    double columnPadding = 8;
     Widget divisor = Container(width: 0.5, color: Colors.black);
 
     rows({required Widget child}) {
-      return Container(
-          color: Colors.lightBlueAccent.withOpacity(0.2),
-          padding: EdgeInsets.all(columnPadding),
-          width: columnWidth,
-          child: Center(child: child));
+      return Expanded(
+        child: Container(
+            color: Colors.lightBlueAccent.withOpacity(0.2),
+            width: columnWidth,
+            child: Center(child: child)),
+      );
     }
 
     return Container(
@@ -71,17 +71,17 @@ class _FIIReservaState extends State<FIIReserva> {
   _addButton() {
     return Container(
       height: 30,
-      width: 301,
+      width: 502,
       color: Colors.green,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
         onPressed: () {},
-        child: const Text('Adcionar'),
+        child: const Text('FII Reserva'),
       ),
     );
   }
 
   _horizontalDivisor() {
-    return Container(width: 301, height: 0.5, color: Colors.black);
+    return Container(width: 502, height: 0.5, color: Colors.black);
   }
 }
