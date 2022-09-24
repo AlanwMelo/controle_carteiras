@@ -1,3 +1,4 @@
+import 'package:controle_carteiras/presentation/container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -11,8 +12,9 @@ class Resume extends StatefulWidget {
 class _ResumeState extends State<Resume> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 300,
+    return SizedBox(
+      width: 200,
+      height: 350,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -27,19 +29,10 @@ class _ResumeState extends State<Resume> {
 
   _resumeContainer() {
     Widget sizedBox = const SizedBox(height: 6);
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(5.0),
+    return BeautifulContainer(
+      color: Colors.lightBlueAccent.withOpacity(0.5),
       child: Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.lightBlueAccent.withOpacity(0.8),
-              offset: Offset(0.0, 1.0), //(x,y)
-              blurRadius: 4.0,
-            ),
-          ],
-        ),
-        width: 250,
+        color: Colors.lightBlueAccent.withOpacity(0.2),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

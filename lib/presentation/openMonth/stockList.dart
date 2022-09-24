@@ -1,3 +1,4 @@
+import 'package:controle_carteiras/presentation/container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -11,35 +12,25 @@ class StockList extends StatefulWidget {
 class _StockListState extends State<StockList> {
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(5.0),
-      child: Container(decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.lightBlueAccent.withOpacity(0.8),
-            offset: Offset(0.0, 1.0), //(x,y)
-            blurRadius: 4.0,
-          ),
+    return BeautifulContainer(
+      color: Colors.lightBlueAccent.withOpacity(0.5),
+      child: Column(
+        children: [
+          _addButton(),
+          _stockLines(
+              paper: _leadingText(text: 'Papel'),
+              amount: _leadingText(text: 'Quantidade'),
+              boughtValue: _leadingText(text: 'Compra'),
+              actualPrice: _leadingText(text: 'Atual'),
+              dif: _leadingText(text: 'Diferença')),
+          _horizontalDivisor(),
+          _stockLines(
+              paper: Text('IRBR3'),
+              amount: Text('42'),
+              boughtValue: Text('11.3'),
+              actualPrice: Center(child: Text('12.3')),
+              dif: Text('10%'))
         ],
-      ),
-        child: Column(
-          children: [
-            _addButton(),
-            _stockLines(
-                paper: _leadingText(text: 'Papel'),
-                amount: _leadingText(text: 'Quantidade'),
-                boughtValue: _leadingText(text: 'Compra'),
-                actualPrice: _leadingText(text: 'Atual'),
-                dif: _leadingText(text: 'Diferença')),
-            _horizontalDivisor(),
-            _stockLines(
-                paper: Text('IRBR3'),
-                amount: Text('42'),
-                boughtValue: Text('11.3'),
-                actualPrice: Center(child: Text('12.3')),
-                dif: Text('10%'))
-          ],
-        ),
       ),
     );
   }
@@ -60,6 +51,7 @@ class _StockListState extends State<StockList> {
 
     rows({required Widget child}) {
       return Container(
+        color: Colors.lightBlueAccent.withOpacity(0.2),
           padding: EdgeInsets.all(columnPadding),
           width: columnWidth,
           child: Center(child: child));

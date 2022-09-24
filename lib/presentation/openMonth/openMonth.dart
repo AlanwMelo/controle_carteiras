@@ -22,7 +22,7 @@ class _OpenMonthState extends State<OpenMonth> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(height: 160, color: Colors.green, child: Row()),
+            _mainInfo(),
             SizedBox(
                 child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -37,5 +37,14 @@ class _OpenMonthState extends State<OpenMonth> {
         ),
       ),
     );
+  }
+
+  _mainInfo() {
+    return Container(
+        height: 160,
+        color: Colors.green,
+        child: Row(
+          children: [Column()],
+        ));
   }
 }
