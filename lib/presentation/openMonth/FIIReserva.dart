@@ -10,6 +10,17 @@ class FIIReserva extends StatefulWidget {
 }
 
 class _FIIReservaState extends State<FIIReserva> {
+  List<FIIData> fiiData = [];
+
+  @override
+  void initState() {
+    fiiData.add(FIIData('IRBR3', '67', '123'));
+    fiiData.add(FIIData('RBVA11', '27', '111'));
+    fiiData.add(FIIData('CAPMO', '17', '12'));
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BeautifulContainer(
@@ -22,12 +33,22 @@ class _FIIReservaState extends State<FIIReserva> {
             amount: _leadingText(text: 'Quantidade'),
             actualPrice: _leadingText(text: 'Atual'),
           ),
-          _horizontalDivisor(),
-          _stockLines(
-            paper: Text('IRBR3'),
-            amount: Text('42'),
-            actualPrice: Center(child: Text('12.3')),
-          )
+          ListView.builder(
+              shrinkWrap: true,
+              itemCount: fiiData.length,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                return Column(
+                  children: [
+                    _horizontalDivisor(),
+                    _stockLines(
+                      paper: Text(fiiData[index].papel),
+                      amount: Text(fiiData[index].quantidade),
+                      actualPrice: Center(child: Text(fiiData[index].valor)),
+                    )
+                  ],
+                );
+              }),
         ],
       ),
     );
@@ -75,7 +96,10 @@ class _FIIReservaState extends State<FIIReserva> {
       color: Colors.green,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-        onPressed: () {},
+        onPressed: () {
+          fiiData.add(FIIData('a', 'b', 'c'));
+          setState(() {});
+        },
         child: const Text('FII Reserva'),
       ),
     );
@@ -84,4 +108,12 @@ class _FIIReservaState extends State<FIIReserva> {
   _horizontalDivisor() {
     return Container(width: 502, height: 0.5, color: Colors.black);
   }
+}
+
+class FIIData {
+  final String papel;
+  final String quantidade;
+  final String valor;
+
+  FIIData(this.papel, this.quantidade, this.valor);
 }

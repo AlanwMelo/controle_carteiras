@@ -10,6 +10,16 @@ class StockList extends StatefulWidget {
 }
 
 class _StockListState extends State<StockList> {
+  List<StockData> stockData = [];
+
+  @override
+  void initState() {
+    stockData.add(StockData('VAL3', '12', '100', '112', '12%'));
+    stockData.add(StockData('VAL3', '12', '100', '112', '12%'));
+    stockData.add(StockData('VAL3', '12', '100', '112', '12%'));
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BeautifulContainer(
@@ -23,13 +33,24 @@ class _StockListState extends State<StockList> {
               boughtValue: _leadingText(text: 'Compra'),
               actualPrice: _leadingText(text: 'Atual'),
               dif: _leadingText(text: 'Diferença')),
-          _horizontalDivisor(),
-          _stockLines(
-              paper: Text('IRBR3'),
-              amount: Text('42'),
-              boughtValue: Text('11.3'),
-              actualPrice: Center(child: Text('12.3')),
-              dif: Text('10%'))
+          ListView.builder(
+              shrinkWrap: true,
+              itemCount: stockData.length,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                return Column(
+                  children: [
+                    _horizontalDivisor(),
+                    _stockLines(
+                        paper: Text(stockData[index].papel),
+                        amount: Text(stockData[index].quantidade),
+                        boughtValue: Text(stockData[index].valorCompra),
+                        actualPrice:
+                            Center(child: Text(stockData[index].valorAtual)),
+                        dif: Text(stockData[index].dif))
+                  ],
+                );
+              }),
         ],
       ),
     );
@@ -50,7 +71,7 @@ class _StockListState extends State<StockList> {
     rows({required Widget child}) {
       return Expanded(
         child: Container(
-          color: Colors.lightBlueAccent.withOpacity(0.2),
+            color: Colors.lightBlueAccent.withOpacity(0.2),
             child: Center(child: child)),
       );
     }
@@ -78,12 +99,26 @@ class _StockListState extends State<StockList> {
       height: 30,
       width: 502,
       color: Colors.green,
-      child: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-        onPressed: () {  },
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+        onPressed: () {},
         child: const Text('Papeis do mês'),
       ),
     );
-  }_horizontalDivisor() {
+  }
+
+  _horizontalDivisor() {
     return Container(width: 502, height: 0.5, color: Colors.black);
   }
+}
+
+class StockData {
+  final String papel;
+  final String quantidade;
+  final String valorCompra;
+  final String valorAtual;
+  final String dif;
+
+  StockData(
+      this.papel, this.quantidade, this.valorCompra, this.valorAtual, this.dif);
 }

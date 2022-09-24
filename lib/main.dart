@@ -37,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Colors.blue.withOpacity(0.7),
-        title: Text(widget.title),
+        title: Text('Relatorio Atual'),
       ),
       body: Column(
         children: [
