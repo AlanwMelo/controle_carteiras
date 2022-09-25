@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_carteiras/data/docManagement.dart';
 import 'package:controle_carteiras/presentation/container.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,14 +11,14 @@ class DocList extends StatefulWidget {
 
 class _DocListState extends State<DocList> {
   int screenController = 0;
+  bool loading = false;
   List<GridList> gridList = [];
   List<String> yearsList = [];
   List<String> monthsList = [];
 
   @override
   void initState() {
-    yearsList = ['2021', '2022'];
-    monthsList = ['Jan', 'Fev'];
+    _loadYearsList();
     yearsList.forEach((element) {
       gridList.add(GridList(text: element));
     });
@@ -28,37 +29,48 @@ class _DocListState extends State<DocList> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () => _willPop(),
-      child: Scaffold(
-        backgroundColor: Colors.black.withOpacity(0),
-        body: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              InkWell(
-                onTap: () {},
-                child: Container(
-                  height: 40,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                      color: Colors.green.withOpacity(0.7),
-                      border: Border(
-                          bottom: BorderSide(
-                              width: 5,
-                              color: Colors.lightBlueAccent.withOpacity(0.2)))),
-                  child: const Center(
-                      child: Text(
-                    'Adcionar',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                  )),
-                ),
+      child: Stack(
+        children: [
+          loading
+              ? Container(
+                  color: Colors.white.withOpacity(0.3),
+                  child: const Center(child: CircularProgressIndicator()),
+                )
+              : Container(),
+          Scaffold(
+            backgroundColor: Colors.black.withOpacity(0),
+            body: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  InkWell(
+                    onTap: () {},
+                    child: Container(
+                      height: 40,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                          color: Colors.green.withOpacity(0.7),
+                          border: Border(
+                              bottom: BorderSide(
+                                  width: 5,
+                                  color: Colors.lightBlueAccent
+                                      .withOpacity(0.2)))),
+                      child: const Center(
+                          child: Text(
+                        'Adcionar',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
+                      )),
+                    ),
+                  ),
+                  _lists(),
+                ],
               ),
-              _lists(),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -95,17 +107,32 @@ class _DocListState extends State<DocList> {
     );
   }
 
-  _listTapTreatment() {
+  _listTapTreatment() async {
     if (screenController == 0) {
-      screenController = 1;
+      _loadController(true);
       gridList.clear();
-      for (var element in monthsList) {
-        gridList.add(GridList(text: element));
+
+      screenController = 1;
+      QuerySnapshot result = await DocManagement().getMonths('2024');
+
+      for (var element in result.docs) {
+        gridList.add(GridList(text: element.id));
       }
-      setState(() {});
-    }else{
+
+      _loadController(false);
+    } else {
       DocManagement().createDoc();
     }
+  }
+
+  _loadYearsList() async {
+    _loadController(true);
+    QuerySnapshot result = await DocManagement().getDocuments();
+    for (var element in result.docs) {
+      yearsList.add(element.id);
+      gridList.add(GridList(text: element.id));
+    }
+    _loadController(false);
   }
 
   Future<bool> _willPop() async {
@@ -121,6 +148,11 @@ class _DocListState extends State<DocList> {
       print('nop');
       return false;
     }
+  }
+
+  _loadController(bool bool) {
+    loading = bool;
+    setState(() {});
   }
 }
 
