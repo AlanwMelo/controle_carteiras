@@ -13,7 +13,7 @@ class BeautifulContainer extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(5.0),
       child: Container(
-        color: Colors.lightBlueAccent.withOpacity(0.5),
+        color: color,
         child: Card(
           elevation: 12,
           child: child,

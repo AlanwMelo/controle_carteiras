@@ -64,8 +64,14 @@ class _MyHomePageState extends State<MyHomePage> {
             body: Column(
               children: [
                 Expanded(
-                    child:
-                        screenController == 0 ? const OpenMonth() : DocList()),
+                    child: screenController == 0
+                        ? const OpenMonth()
+                        : DocList(
+                            result: (result) {
+                              screenController = 0;
+                              setState(() {});
+                            },
+                          )),
                 _bottomBar(),
               ],
             ),

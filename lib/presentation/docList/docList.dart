@@ -1,10 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_carteiras/data/docManagement.dart';
 import 'package:controle_carteiras/presentation/container.dart';
+import 'package:controle_carteiras/presentation/docList/newDocAlert.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class DocList extends StatefulWidget {
+  const DocList({super.key, required this.result});
+
+  final Function(List<String>) result;
+
   @override
   State<StatefulWidget> createState() => _DocListState();
 }
@@ -44,7 +49,7 @@ class _DocListState extends State<DocList> {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   InkWell(
-                    onTap: () {},
+                    onTap: () => _newDoc(),
                     child: Container(
                       height: 40,
                       width: MediaQuery.of(context).size.width,
@@ -121,7 +126,7 @@ class _DocListState extends State<DocList> {
 
       _loadController(false);
     } else {
-      DocManagement().createDoc();
+      //DocManagement().createDoc();
     }
   }
 
@@ -153,6 +158,15 @@ class _DocListState extends State<DocList> {
   _loadController(bool bool) {
     loading = bool;
     setState(() {});
+  }
+
+  _newDoc() {
+    return NewDocDialog().showNewDocDialog(context, (result) async {
+      _loadController(true);
+      await DocManagement().createDoc(year: result[0], month: result[1]);
+      _loadController(false);
+      widget.result(result);
+    });
   }
 }
 

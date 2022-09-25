@@ -7,16 +7,21 @@ class DocManagement {
       .doc(FirebaseAuth.instance.currentUser?.uid)
       .collection('documents');
 
-  createDoc() {
-    Map<String, dynamic> data = {'teste': 'testa'};
+  createDoc({required String year, required String month}) async {
+    Map<String, dynamic> updated = {'updated': DateTime.now()};
+    Map<String, dynamic> data = {'created': DateTime.now()};
 
-    _docs
+    await _docs.doc(year).set(updated);
+    await _docs.doc(year).collection('months').doc(month).set(data);
+    return true;
+
+    /*_docs
         .doc('2025')
         .collection('months')
         .doc('janeiro')
         .collection('stocks')
         .doc('RBVA11')
-        .set(data);
+        .set(data);*/
   }
 
   getDocuments() async {
