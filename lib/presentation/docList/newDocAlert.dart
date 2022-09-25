@@ -1,22 +1,10 @@
+import 'package:controle_carteiras/data/monthsList.dart';
 import 'package:controle_carteiras/presentation/container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class NewDocDialog {
-  final List<String> months = [
-    'Janeiro',
-    'Fevereiro',
-    'Março',
-    'Abril',
-    'Maio',
-    'Junho',
-    'Julho',
-    'Agosto',
-    'Setembro',
-    'Outubro',
-    'Novembro',
-    'Dezembro'
-  ];
+  final List<String> months = monthsList;
   String selectedMonth = '';
   TextEditingController textEditingController = TextEditingController();
 

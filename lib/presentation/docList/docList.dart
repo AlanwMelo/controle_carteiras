@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_carteiras/data/docManagement.dart';
+import 'package:controle_carteiras/data/monthsList.dart';
 import 'package:controle_carteiras/presentation/container.dart';
 import 'package:controle_carteiras/presentation/docList/newDocAlert.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,7 +20,7 @@ class _DocListState extends State<DocList> {
   bool loading = false;
   List<GridList> gridList = [];
   List<String> yearsList = [];
-  List<String> monthsList = [];
+  List<String> months = [];
 
   @override
   void initState() {
@@ -120,6 +121,7 @@ class _DocListState extends State<DocList> {
       screenController = 1;
       QuerySnapshot result = await DocManagement().getMonths('2024');
 
+
       for (var element in result.docs) {
         gridList.add(GridList(text: element.id));
       }
@@ -168,6 +170,7 @@ class _DocListState extends State<DocList> {
       widget.result(result);
     });
   }
+
 }
 
 class GridList {
