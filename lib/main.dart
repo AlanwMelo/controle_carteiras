@@ -1,4 +1,5 @@
 import 'package:controle_carteiras/data/googleSignIn.dart';
+import 'package:controle_carteiras/presentation/docList/docList.dart';
 import 'package:controle_carteiras/presentation/openMonth/openMonth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -39,6 +40,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int screenController = 0;
+  String title = 'Bem vindo Alan!';
+
   @override
   void initState() {
     FirebaseAuth.instance.userChanges().listen((event) {
@@ -55,20 +59,14 @@ class _MyHomePageState extends State<MyHomePage> {
             appBar: AppBar(
               centerTitle: true,
               backgroundColor: Colors.blue.withOpacity(0.7),
-              title: Text('Relatorio Atual'),
+              title: Text(title),
             ),
             body: Column(
               children: [
-                const Expanded(child: OpenMonth()),
-                GestureDetector(
-                  onTap: () {
-                    FirebaseAuth.instance.signOut();
-                  },
-                  child: Container(
-                    height: 50,
-                    color: Colors.blue.withOpacity(0.7),
-                  ),
-                ),
+                Expanded(
+                    child:
+                        screenController == 0 ? const OpenMonth() : DocList()),
+                _bottomBar(),
               ],
             ),
           )
@@ -95,5 +93,44 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           );
+  }
+
+  _bottomBar() {
+    return Container(
+      height: 50,
+      color: Colors.blue.withOpacity(0.7),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Expanded(
+            child: InkWell(
+              onTap: () {
+                screenController = 0;
+                title = 'Relatório Setembro 2022';
+                setState(() {});
+              },
+              child: const Icon(Icons.auto_graph_rounded, color: Colors.white),
+            ),
+          ),
+          Expanded(
+            child: InkWell(
+              onTap: () {
+                screenController = 1;
+                title = 'Lista de relatórios';
+                setState(() {});
+              },
+              child: const Icon(
+                Icons.account_tree_outlined,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          Expanded(
+              child: InkWell(
+                  onTap: () => FirebaseAuth.instance.signOut(),
+                  child: const Icon(Icons.login_rounded, color: Colors.white))),
+        ],
+      ),
+    );
   }
 }
