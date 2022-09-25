@@ -1,7 +1,15 @@
+import 'package:controle_carteiras/data/googleSignIn.dart';
 import 'package:controle_carteiras/presentation/openMonth/openMonth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(const MyApp());
 }
 
@@ -12,6 +20,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -31,23 +40,60 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   @override
+  void initState() {
+    FirebaseAuth.instance.userChanges().listen((event) {
+      setState(() {});
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.blueAccent.withOpacity(0.2),
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: Colors.blue.withOpacity(0.7),
-        title: Text('Relatorio Atual'),
-      ),
-      body: Column(
-        children: [
-          const Expanded(child: OpenMonth()),
-          Container(
-            height: 50,
-            color: Colors.blue.withOpacity(0.7),
-          ),
-        ],
-      ),
-    );
+    return FirebaseAuth.instance.currentUser != null
+        ? Scaffold(
+            backgroundColor: Colors.blueAccent.withOpacity(0.2),
+            appBar: AppBar(
+              centerTitle: true,
+              backgroundColor: Colors.blue.withOpacity(0.7),
+              title: Text('Relatorio Atual'),
+            ),
+            body: Column(
+              children: [
+                const Expanded(child: OpenMonth()),
+                GestureDetector(
+                  onTap: () {
+                    FirebaseAuth.instance.signOut();
+                  },
+                  child: Container(
+                    height: 50,
+                    color: Colors.blue.withOpacity(0.7),
+                  ),
+                ),
+              ],
+            ),
+          )
+        : Scaffold(
+            backgroundColor: Colors.blueAccent.withOpacity(0.2),
+            appBar: AppBar(
+              elevation: 0,
+              centerTitle: true,
+              backgroundColor: Colors.blue.withOpacity(0.7),
+            ),
+            body: Container(
+              color: Colors.blue.withOpacity(0.7),
+              child: Center(
+                child: GestureDetector(
+                  onTap: () {
+                    MyGoogleSignIn().signInWithGoogle();
+                  },
+                  child: SizedBox(
+                      height: 250,
+                      width: 250,
+                      child: Image.network(
+                          'https://img2.gratispng.com/20180326/gte/kisspng-google-logo-g-suite-google-guava-google-plus-5ab8b5b15fd9f4.0166567715220545773927.jpg')),
+                ),
+              ),
+            ),
+          );
   }
 }

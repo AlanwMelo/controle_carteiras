@@ -13,6 +13,9 @@ dependencies:
 
   cupertino_icons: ^1.0.2
   yahoo_finance_data_reader: ^0.0.7
+  google_sign_in: ^5.4.2
+  firebase_auth: ^3.10.0
+  cloud_firestore: ^3.4.2
 
 dev_dependencies:
   flutter_test:
