@@ -3,7 +3,6 @@ import 'package:controle_carteiras/presentation/openMonth/resume.dart';
 import 'package:controle_carteiras/presentation/openMonth/stock/stockList.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:yahoo_finance_data_reader/yahoo_finance_data_reader.dart';
 
 class OpenMonth extends StatefulWidget {
   final String month;
@@ -160,7 +159,11 @@ class _OpenMonthState extends State<OpenMonth> {
     double dif = applicationsResume[1] - applicationsResume[0];
     double percentage = dif / applicationsResume[0] * 100;
 
-    amountDif = percentage.toStringAsFixed(0);
+    if (dif > 0) {
+      amountDif = percentage.toStringAsFixed(0);
+    } else {
+      amountDif = '-';
+    }
     setState(() {});
   }
 }

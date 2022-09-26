@@ -153,8 +153,11 @@ class _ResumeState extends State<Resume> {
     if (profit > 0) {
       if (percentage >= 50) {
         reinvestValue = profit * 0.50;
+        reinvestPercentage = 50;
         removeFromHighRisk = profit * 0.25;
+        removePercentage = 25;
         sendToBackup = profit * 0.25;
+        sendToBackupPercentage = 25;
       } else {
         reinvestValue = profit * 0.35;
         reinvestPercentage = 35;
@@ -164,7 +167,12 @@ class _ResumeState extends State<Resume> {
         sendToBackupPercentage = 40;
       }
     } else {
+      reinvestValue = 0;
+      reinvestPercentage = 0;
+      removeFromHighRisk = 0;
+      removePercentage = 0;
       sendToBackup = profit;
+
     }
   }
 }

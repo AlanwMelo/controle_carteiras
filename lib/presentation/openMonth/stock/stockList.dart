@@ -69,13 +69,27 @@ class _StockListState extends State<StockList> {
                 return Column(
                   children: [
                     _horizontalDivisor(),
-                    _stockLines(
-                        paper: Text(stockData[index].papel),
-                        amount: Text(stockData[index].quantidade),
-                        boughtValue: Text(stockData[index].valorCompra),
-                        actualPrice:
-                            Center(child: Text(stockData[index].valorAtual)),
-                        dif: difText())
+                    InkWell(
+                      onTap: () {},
+                      onLongPress: () {
+                        initialAmount = initialAmount -
+                            double.parse(stockData[index].valorCompra) *
+                                double.parse(stockData[index].quantidade);
+                        finalAmount = finalAmount -
+                            double.parse(stockData[index].valorAtual) *
+                                double.parse(stockData[index].quantidade);
+
+                        widget.applicationsResume([initialAmount, finalAmount]);
+                        stockData.removeAt(index);
+                      },
+                      child: _stockLines(
+                          paper: Text(stockData[index].papel),
+                          amount: Text(stockData[index].quantidade),
+                          boughtValue: Text(stockData[index].valorCompra),
+                          actualPrice:
+                              Center(child: Text(stockData[index].valorAtual)),
+                          dif: difText()),
+                    )
                   ],
                 );
               }),
