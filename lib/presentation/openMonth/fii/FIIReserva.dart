@@ -55,10 +55,12 @@ class _FIIReservaState extends State<FIIReserva> {
                     _horizontalDivisor(),
                     InkWell(
                       onTap: () {},
-                      onLongPress: () {
+                      onLongPress: () async {
                         fiiAmount = fiiAmount -
                             (double.parse(fiiData[index].quantidade) *
                                 double.parse(fiiData[index].valor));
+                        await DocManagement().deleteFII(
+                            fiiData[index].papel, widget.year, widget.month);
                         widget.fiiAmount(fiiAmount);
                         fiiData.removeAt(index);
                       },
@@ -161,7 +163,6 @@ class _FIIReservaState extends State<FIIReserva> {
           lastValue = await financeReader.getStockLastValue(
               '${data['stock'].toString().toUpperCase()}.SA');
         }
-        print(lastValue);
 
         fiiAmount = fiiAmount + (data['amount'] * double.parse(lastValue));
 

@@ -102,6 +102,18 @@ class DocManagement {
     return true;
   }
 
+  deleteFII(String stock, String year, String month) async {
+    await _docs
+        .doc(year)
+        .collection('months')
+        .doc(month)
+        .collection('fii')
+        .doc(stock.toUpperCase())
+        .delete();
+
+    return true;
+  }
+
   getMonths(String year) async {
     QuerySnapshot result = await _docs.doc(year).collection('months').get();
     return result;
