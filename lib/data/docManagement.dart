@@ -85,7 +85,7 @@ class DocManagement {
   saveFII(Stock stock, String year, String month) async {
     Map<String, dynamic> data = {
       'updated': DateTime.now(),
-      'stock': stock.paper,
+      'stock': stock.paper.replaceAll(' ', ''),
       'amount': stock.amount,
       'boughtValue': stock.boughtValue,
       'lastValue': stock.lastValue,

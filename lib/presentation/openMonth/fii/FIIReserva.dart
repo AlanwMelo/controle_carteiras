@@ -53,10 +53,20 @@ class _FIIReservaState extends State<FIIReserva> {
                 return Column(
                   children: [
                     _horizontalDivisor(),
-                    _stockLines(
-                      paper: Text(fiiData[index].papel),
-                      amount: Text(fiiData[index].quantidade),
-                      actualPrice: Center(child: Text(fiiData[index].valor)),
+                    InkWell(
+                      onTap: () {},
+                      onLongPress: () {
+                        fiiAmount = fiiAmount -
+                            (double.parse(fiiData[index].quantidade) *
+                                double.parse(fiiData[index].valor));
+                        widget.fiiAmount(fiiAmount);
+                        fiiData.removeAt(index);
+                      },
+                      child: _stockLines(
+                        paper: Text(fiiData[index].papel),
+                        amount: Text(fiiData[index].quantidade),
+                        actualPrice: Center(child: Text(fiiData[index].valor)),
+                      ),
                     )
                   ],
                 );
@@ -151,6 +161,7 @@ class _FIIReservaState extends State<FIIReserva> {
           lastValue = await financeReader.getStockLastValue(
               '${data['stock'].toString().toUpperCase()}.SA');
         }
+        print(lastValue);
 
         fiiAmount = fiiAmount + (data['amount'] * double.parse(lastValue));
 
