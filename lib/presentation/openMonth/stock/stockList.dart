@@ -9,14 +9,21 @@ import 'package:flutter/material.dart';
 class StockList extends StatefulWidget {
   final String month;
   final String year;
+  final Function(List<double>) applicationsResume;
 
-  const StockList({super.key, required this.month, required this.year});
+  const StockList(
+      {super.key,
+      required this.month,
+      required this.year,
+      required this.applicationsResume});
 
   @override
   State<StatefulWidget> createState() => _StockListState();
 }
 
 class _StockListState extends State<StockList> {
+  double initialAmount = 0;
+  double finalAmount = 0;
   bool loading = false;
   FinanceReader financeReader = FinanceReader();
   List<StockData> stockData = [];
@@ -169,6 +176,11 @@ class _StockListState extends State<StockList> {
         }
         if (lastValue != 'Error') {
           dif = _getDif(data['boughtValue'], lastValue);
+
+          initialAmount =
+              initialAmount + (data['amount'] * data['boughtValue']);
+          finalAmount =
+              finalAmount + (data['amount'] * double.parse(lastValue));
         }
 
         stockData.add(StockData(
@@ -181,6 +193,7 @@ class _StockListState extends State<StockList> {
 
       setState(() {});
     }
+    widget.applicationsResume([initialAmount, finalAmount]);
     _loadingControl(false);
   }
 

@@ -16,6 +16,10 @@ class OpenMonth extends StatefulWidget {
 }
 
 class _OpenMonthState extends State<OpenMonth> {
+  String initialAmount = '-';
+  String lastAmount = '-';
+  String amountDif = '-';
+
   @override
   void initState() {
     super.initState();
@@ -38,7 +42,13 @@ class _OpenMonthState extends State<OpenMonth> {
                 Container(margin: myMargin, child: const Resume()),
                 Container(
                     margin: myMargin,
-                    child: StockList(month: widget.month, year: widget.year)),
+                    child: StockList(
+                      month: widget.month,
+                      year: widget.year,
+                      applicationsResume: (applicationsResume) {
+                        _refreshResume(applicationsResume);
+                      },
+                    )),
                 Container(
                     margin: myMargin,
                     child: FIIReserva(month: widget.month, year: widget.year)),
@@ -51,6 +61,19 @@ class _OpenMonthState extends State<OpenMonth> {
   }
 
   _mainInfo() {
+    difText() {
+      Color textColor = Colors.greenAccent;
+      if(amountDif != '-'){
+        if (int.parse(amountDif) < 0) {
+          textColor = Colors.redAccent;
+        }
+      }
+
+      return Text('$amountDif%',
+          style: TextStyle(
+              color: textColor, fontSize: 18, fontWeight: FontWeight.bold));
+    }
+
     return Container(
         decoration: BoxDecoration(
             color: Colors.blue.withOpacity(0.7),
@@ -69,13 +92,13 @@ class _OpenMonthState extends State<OpenMonth> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'R\$ 7542',
-                        style: TextStyle(
+                        initialAmount,
+                        style: const TextStyle(
                             fontSize: 30,
                             color: Colors.white,
                             fontWeight: FontWeight.bold),
                       ),
-                      Text(
+                      const Text(
                         'Saldo inicial',
                         style: TextStyle(
                             fontSize: 12,
@@ -88,13 +111,13 @@ class _OpenMonthState extends State<OpenMonth> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'R\$ 7982',
-                        style: TextStyle(
+                        lastAmount,
+                        style: const TextStyle(
                             fontSize: 30,
                             color: Colors.white,
                             fontWeight: FontWeight.bold),
                       ),
-                      Text(
+                      const Text(
                         'Saldo final',
                         style: TextStyle(
                             fontSize: 12,
@@ -105,13 +128,20 @@ class _OpenMonthState extends State<OpenMonth> {
                   ),
                 ],
               ),
-              Text('+ 24%',
-                  style: TextStyle(
-                      color: Colors.greenAccent,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold)),
+              difText(),
             ],
           ),
         ));
+  }
+
+  _refreshResume(List<double> applicationsResume) {
+    initialAmount = applicationsResume[0].toStringAsFixed(2);
+    lastAmount = applicationsResume[1].toStringAsFixed(2);
+
+    double dif = applicationsResume[1] - applicationsResume[0];
+    double percentage = dif / applicationsResume[0] * 100;
+
+    amountDif = percentage.toStringAsFixed(0);
+    setState(() {});
   }
 }
