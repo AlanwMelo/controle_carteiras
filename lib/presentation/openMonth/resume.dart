@@ -3,13 +3,40 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Resume extends StatefulWidget {
-  const Resume({super.key});
+  final double initialValue;
+  final double finalValue;
+  final double backupAmount;
+
+  const Resume(
+      {super.key,
+      required this.initialValue,
+      required this.finalValue,
+      required this.backupAmount});
 
   @override
   State<StatefulWidget> createState() => _ResumeState();
 }
 
 class _ResumeState extends State<Resume> {
+  double removeFromHighRisk = 0;
+  int removePercentage = 50;
+  double reinvestValue = 0;
+  int reinvestPercentage = 25;
+  double sendToBackup = 0;
+  int sendToBackupPercentage = 25;
+  double profit = 0;
+  int backupPercentage = 0;
+
+  @override
+  void initState() {
+    profit = widget.finalValue - widget.initialValue;
+    _calcReinvestAndProfit(
+        initialValue: widget.initialValue,
+        finalValue: widget.finalValue,
+        backupAmount: widget.backupAmount);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -20,15 +47,45 @@ class _ResumeState extends State<Resume> {
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _resumeContainer(),
-              _resumeContainer(),
+              _resumeContainer(
+                  title: "Valor a ser reinvestido",
+                  value: reinvestValue,
+                  subText: Text(
+                    '25% do retorno',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                  color: Colors.lightBlueAccent.withOpacity(0.2)),
+              _resumeContainer(
+                  title: "Lucro",
+                  value: removeFromHighRisk,
+                  subText: Text(
+                    '25% do retorno',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                  color: Colors.lightBlueAccent.withOpacity(0.2)),
             ],
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _resumeContainer(),
-              _resumeContainer(),
+              _resumeContainer(
+                  title: "Dif reserva",
+                  value: sendToBackup,
+                  subText: Text(
+                    '$sendToBackup% ',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                  color: Colors.lightBlueAccent.withOpacity(0.2)),
+              _resumeContainer(
+                  title: "Saldo reserva",
+                  value: widget.backupAmount,
+                  subText: Text(
+                    '$backupPercentage% do total',
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                  color: backupPercentage >= 50
+                      ? Colors.lightBlueAccent.withOpacity(0.2)
+                      : Colors.red.withOpacity(0.2)),
             ],
           ),
         ],
@@ -36,42 +93,72 @@ class _ResumeState extends State<Resume> {
     );
   }
 
-  _resumeContainer() {
+  _resumeContainer(
+      {required String title,
+      required double value,
+      required Text subText,
+      required Color color}) {
     Widget sizedBox = const SizedBox(height: 6);
-    return BeautifulContainer(
-      color: Colors.lightBlueAccent.withOpacity(0.5),
-      child: Container(
-        padding: const EdgeInsets.all(4),
-        color: Colors.lightBlueAccent.withOpacity(0.2),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              children: [
-                Container(
-                    margin: EdgeInsets.only(left: 4, top: 4),
-                    child: Text(
-                      'Valor a ser reinvestido',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    )),
-              ],
-            ),
-            sizedBox,
-            Text(
-              'R\$ 1000000',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+    return SizedBox(
+      width: 170,
+      child: BeautifulContainer(
+        color: Colors.lightBlueAccent.withOpacity(0.5),
+        child: Container(
+          padding: const EdgeInsets.all(4),
+          color: color,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                      margin: const EdgeInsets.only(left: 4, top: 4),
+                      child: Text(
+                        title,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      )),
+                ],
               ),
-            ),
-            sizedBox,
-            Text(
-              '25% do retorno',
-              style: TextStyle(fontSize: 12),
-            ),
-          ],
+              sizedBox,
+              Text(
+                'R\$ $value',
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              sizedBox,
+              subText,
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  _calcReinvestAndProfit(
+      {required double finalValue,
+      required double initialValue,
+      required double backupAmount}) {
+    double dif = initialValue - backupAmount;
+    double percentage = 100 - (dif / initialValue * 100);
+
+    backupPercentage = percentage.toInt();
+
+    if (profit > 0) {
+      if (percentage <= 50) {
+        reinvestValue = profit * 0.50;
+        removeFromHighRisk = profit * 0.25;
+        sendToBackup = profit * 0.25;
+      } else {
+        reinvestValue = profit * 0.35;
+        removeFromHighRisk = profit * 0.25;
+        sendToBackup = profit * 0.4;
+      }
+    } else {
+      sendToBackup = profit;
+    }
+    setState(() {});
   }
 }

@@ -19,6 +19,8 @@ class _OpenMonthState extends State<OpenMonth> {
   String initialAmount = '-';
   String lastAmount = '-';
   String amountDif = '-';
+  double initialDouble = 14;
+  double finalDouble = 10;
 
   @override
   void initState() {
@@ -39,7 +41,13 @@ class _OpenMonthState extends State<OpenMonth> {
             SizedBox(
                 child: Column(
               children: [
-                Container(margin: myMargin, child: const Resume()),
+                Container(
+                    margin: myMargin,
+                    child: Resume(
+                      initialValue: initialDouble,
+                      finalValue: finalDouble,
+                      backupAmount: 2,
+                    )),
                 Container(
                     margin: myMargin,
                     child: StockList(
@@ -63,7 +71,7 @@ class _OpenMonthState extends State<OpenMonth> {
   _mainInfo() {
     difText() {
       Color textColor = Colors.greenAccent;
-      if(amountDif != '-'){
+      if (amountDif != '-') {
         if (int.parse(amountDif) < 0) {
           textColor = Colors.redAccent;
         }
