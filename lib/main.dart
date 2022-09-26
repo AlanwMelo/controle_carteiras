@@ -68,6 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         ? const OpenMonth()
                         : DocList(
                             result: (result) {
+                              print(result);
                               screenController = 0;
                               setState(() {});
                             },

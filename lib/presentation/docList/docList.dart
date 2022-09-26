@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_carteiras/data/docManagement.dart';
-import 'package:controle_carteiras/data/monthsList.dart';
 import 'package:controle_carteiras/presentation/container.dart';
 import 'package:controle_carteiras/presentation/docList/newDocAlert.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,6 +17,7 @@ class DocList extends StatefulWidget {
 class _DocListState extends State<DocList> {
   int screenController = 0;
   bool loading = false;
+  String selectedYear = '';
   List<GridList> gridList = [];
   List<String> yearsList = [];
   List<String> months = [];
@@ -25,9 +25,6 @@ class _DocListState extends State<DocList> {
   @override
   void initState() {
     _loadYearsList();
-    yearsList.forEach((element) {
-      gridList.add(GridList(text: element));
-    });
     super.initState();
   }
 
@@ -113,13 +110,14 @@ class _DocListState extends State<DocList> {
     );
   }
 
-  _listTapTreatment(String year) async {
+  _listTapTreatment(String text) async {
     if (screenController == 0) {
+      selectedYear = text;
       _loadController(true);
       gridList.clear();
 
       screenController = 1;
-      QuerySnapshot result = await DocManagement().getMonths(year);
+      QuerySnapshot result = await DocManagement().getMonths(text);
 
       months = await _sortMonths(result.docs);
       for (var element in months) {
@@ -128,7 +126,7 @@ class _DocListState extends State<DocList> {
 
       _loadController(false);
     } else {
-      //DocManagement().createDoc();
+      widget.result([selectedYear, text]);
     }
   }
 
