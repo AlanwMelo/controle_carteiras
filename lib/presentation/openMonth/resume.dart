@@ -50,18 +50,22 @@ class _ResumeState extends State<Resume> {
               _resumeContainer(
                   title: "Valor a ser reinvestido",
                   value: reinvestValue,
-                  subText: Text(
-                    '25% do retorno',
-                    style: TextStyle(fontSize: 12),
-                  ),
+                  subText: reinvestValue > 0
+                      ? Text(
+                          '$reinvestPercentage% do retorno',
+                          style: const TextStyle(fontSize: 12),
+                        )
+                      : const Text('-'),
                   color: Colors.lightBlueAccent.withOpacity(0.2)),
               _resumeContainer(
                   title: "Lucro",
                   value: removeFromHighRisk,
-                  subText: Text(
-                    '25% do retorno',
-                    style: TextStyle(fontSize: 12),
-                  ),
+                  subText: removeFromHighRisk > 0
+                      ? Text(
+                          '$removePercentage% do retorno',
+                          style: const TextStyle(fontSize: 12),
+                        )
+                      : const Text('-'),
                   color: Colors.lightBlueAccent.withOpacity(0.2)),
             ],
           ),
@@ -71,10 +75,12 @@ class _ResumeState extends State<Resume> {
               _resumeContainer(
                   title: "Dif reserva",
                   value: sendToBackup,
-                  subText: Text(
-                    '$sendToBackup% ',
-                    style: TextStyle(fontSize: 12),
-                  ),
+                  subText: sendToBackup > 0
+                      ? Text(
+                          '$sendToBackupPercentage% do lucro',
+                          style: const TextStyle(fontSize: 12),
+                        )
+                      : const Text('-'),
                   color: Colors.lightBlueAccent.withOpacity(0.2)),
               _resumeContainer(
                   title: "Saldo reserva",
@@ -122,7 +128,7 @@ class _ResumeState extends State<Resume> {
               ),
               sizedBox,
               Text(
-                'R\$ $value',
+                'R\$ ${value.toStringAsFixed(2)}',
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -147,14 +153,17 @@ class _ResumeState extends State<Resume> {
     backupPercentage = percentage.toInt();
 
     if (profit > 0) {
-      if (percentage <= 50) {
+      if (percentage >= 50) {
         reinvestValue = profit * 0.50;
         removeFromHighRisk = profit * 0.25;
         sendToBackup = profit * 0.25;
       } else {
         reinvestValue = profit * 0.35;
+        reinvestPercentage = 35;
         removeFromHighRisk = profit * 0.25;
+        removePercentage = 25;
         sendToBackup = profit * 0.4;
+        sendToBackupPercentage = 40;
       }
     } else {
       sendToBackup = profit;

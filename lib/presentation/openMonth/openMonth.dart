@@ -19,8 +19,9 @@ class _OpenMonthState extends State<OpenMonth> {
   String initialAmount = '-';
   String lastAmount = '-';
   String amountDif = '-';
-  double initialDouble = 14;
-  double finalDouble = 10;
+  double initialDouble = 0;
+  double finalDouble = 0;
+  double backupAmount = 0;
 
   @override
   void initState() {
@@ -46,7 +47,7 @@ class _OpenMonthState extends State<OpenMonth> {
                     child: Resume(
                       initialValue: initialDouble,
                       finalValue: finalDouble,
-                      backupAmount: 2,
+                      backupAmount: backupAmount,
                     )),
                 Container(
                     margin: myMargin,
