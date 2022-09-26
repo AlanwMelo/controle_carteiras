@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_carteiras/data/docManagement.dart';
+import 'package:controle_carteiras/data/financeReader.dart';
 import 'package:controle_carteiras/presentation/container.dart';
-import 'package:controle_carteiras/presentation/openMonth/stockDialog.dart';
+import 'package:controle_carteiras/presentation/openMonth/stock/stockDialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +17,8 @@ class StockList extends StatefulWidget {
 }
 
 class _StockListState extends State<StockList> {
+  bool loading = false;
+  FinanceReader financeReader = FinanceReader();
   List<StockData> stockData = [];
 
   @override
@@ -42,6 +45,20 @@ class _StockListState extends State<StockList> {
               itemCount: stockData.length,
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
+                difText() {
+                  if (stockData[index].dif != 'Error') {
+                    double value = double.parse(stockData[index].dif);
+
+                    return Text(
+                      '${stockData[index].dif}%',
+                      style: TextStyle(
+                          color: value < 0 ? Colors.redAccent : Colors.black),
+                    );
+                  } else {
+                    return Text(stockData[index].dif);
+                  }
+                }
+
                 return Column(
                   children: [
                     _horizontalDivisor(),
@@ -51,7 +68,7 @@ class _StockListState extends State<StockList> {
                         boughtValue: Text(stockData[index].valorCompra),
                         actualPrice:
                             Center(child: Text(stockData[index].valorAtual)),
-                        dif: Text(stockData[index].dif))
+                        dif: difText())
                   ],
                 );
               }),
@@ -83,7 +100,7 @@ class _StockListState extends State<StockList> {
       );
     }
 
-    return Container(
+    return SizedBox(
       height: 40,
       child: Row(
         children: [
@@ -106,13 +123,26 @@ class _StockListState extends State<StockList> {
       height: 30,
       width: 502,
       color: Colors.green,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-        onPressed: () {
-          StockDialog().showStockDialog(context);
-        },
-        child: const Text('Papeis do mês'),
-      ),
+      child: loading
+          ? const Center(
+              child: SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 2,
+                  )))
+          : ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              onPressed: () {
+                StockDialog().showStockDialog(context, (res) async {
+                  await DocManagement()
+                      .saveStock(res, widget.year, widget.month);
+                  _loadStocks();
+                });
+              },
+              child: const Text('Papeis do mês'),
+            ),
     );
   }
 
@@ -121,12 +151,47 @@ class _StockListState extends State<StockList> {
   }
 
   Future<void> _loadStocks() async {
+    stockData.clear();
+    _loadingControl(true);
     QuerySnapshot stocksList =
         await DocManagement().getStocks(widget.year, widget.month);
 
     for (var stock in stocksList.docs) {
-      stockData.add(StockData('VAL3', '12', '100', '112', '12%'));
+      Map data = stock.data() as Map;
+      String lastValue = data['lastValue'].toString();
+      String dif = 'Error';
+
+      if (data['lastValue'] == null) {
+        lastValue = await financeReader
+            .getStockLastValue('${data['stock'].toString().toUpperCase()}.SA');
+      }
+      if (lastValue != 'Error') {
+        dif = _getDif(data['boughtValue'], lastValue);
+      }
+
+      stockData.add(StockData(
+          data['stock'].toString().toUpperCase(),
+          data['amount'].toString(),
+          data['boughtValue'].toString(),
+          lastValue,
+          dif));
+
+      setState(() {});
     }
+    _loadingControl(false);
+  }
+
+  _loadingControl(bool bool) {
+    setState(() {
+      loading = bool;
+    });
+  }
+
+  _getDif(originalValue, String lastValue) {
+    double dif = double.parse(lastValue) - originalValue;
+    double percentage = dif / originalValue * 100;
+
+    return percentage.toStringAsFixed(2);
   }
 }
 

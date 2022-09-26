@@ -1,6 +1,6 @@
 import 'package:controle_carteiras/presentation/openMonth/FIIReserva.dart';
 import 'package:controle_carteiras/presentation/openMonth/resume.dart';
-import 'package:controle_carteiras/presentation/openMonth/stockList.dart';
+import 'package:controle_carteiras/presentation/openMonth/stock/stockList.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:yahoo_finance_data_reader/yahoo_finance_data_reader.dart';
@@ -18,7 +18,6 @@ class OpenMonth extends StatefulWidget {
 class _OpenMonthState extends State<OpenMonth> {
   @override
   void initState() {
-    _yfin();
     super.initState();
   }
 
@@ -112,11 +111,5 @@ class _OpenMonthState extends State<OpenMonth> {
             ],
           ),
         ));
-  }
-
-  Future<void> _yfin() async {
-    List<dynamic> prices =
-        await YahooFinanceDailyReader().getDailyData('OIBR3.SA');
-    print(prices[0]);
   }
 }
