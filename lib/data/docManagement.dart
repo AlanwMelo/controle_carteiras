@@ -40,6 +40,16 @@ class DocManagement {
     return result;
   }
 
+  getFIIs(String year, String month) async {
+    QuerySnapshot result = await _docs
+        .doc(year)
+        .collection('months')
+        .doc(month)
+        .collection('fii')
+        .get();
+    return result;
+  }
+
   saveStock(Stock stock, String year, String month) async {
     Map<String, dynamic> data = {
       'updated': DateTime.now(),

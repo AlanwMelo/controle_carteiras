@@ -173,7 +173,7 @@ class _StockListState extends State<StockList> {
 
         stockData.add(StockData(
             data['stock'].toString().toUpperCase(),
-            data['amount'].toString(),
+            data['amount'].toInt().toString(),
             data['boughtValue'].toString(),
             lastValue,
             dif));

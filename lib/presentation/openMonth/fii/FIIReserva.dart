@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_carteiras/data/docManagement.dart';
+import 'package:controle_carteiras/data/financeReader.dart';
 import 'package:controle_carteiras/presentation/container.dart';
 import 'package:controle_carteiras/presentation/openMonth/fii/fiiDialog.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,6 +18,7 @@ class FIIReserva extends StatefulWidget {
 
 class _FIIReservaState extends State<FIIReserva> {
   List<FIIData> fiiData = [];
+  FinanceReader financeReader = FinanceReader();
   bool loading = false;
 
   @override
@@ -99,18 +102,26 @@ class _FIIReservaState extends State<FIIReserva> {
       height: 30,
       width: 502,
       color: Colors.green,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-        onPressed: () {
-          FIIDialog().showStockDialog(context, (res) async {
-            await DocManagement().saveStock(res, widget.year, widget.month);
-            _loadFIIs();
-          });
-          fiiData.add(FIIData('a', 'b', 'c'));
-          setState(() {});
-        },
-        child: const Text('FII Reserva'),
-      ),
+      child: loading
+          ? const Center(
+              child: SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 2,
+                  )))
+          : ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              onPressed: () {
+                FIIDialog().showStockDialog(context, (res) async {
+                  await DocManagement().saveFII(res, widget.year, widget.month);
+                  _loadFIIs();
+                });
+                setState(() {});
+              },
+              child: const Text('FII Reserva'),
+            ),
     );
   }
 
@@ -118,18 +129,37 @@ class _FIIReservaState extends State<FIIReserva> {
     return Container(width: 502, height: 0.5, color: Colors.black);
   }
 
-  _loadFIIs() {
-    fiiData.clear();
+  _loadFIIs() async {
     _loadingControl(true);
+    QuerySnapshot fiiList =
+        await DocManagement().getFIIs(widget.year, widget.month);
 
-    fiiData.add(FIIData('IRBR3', '67', '123'));
+    for (var fii in fiiList.docs) {
+      Map data = fii.data() as Map;
+      String lastValue = data['lastValue'].toString();
+
+      if (fiiData.indexWhere((element) =>
+              element.papel == data['stock'].toString().toUpperCase()) ==
+          -1) {
+        if (data['lastValue'] == null) {
+          lastValue = await financeReader.getStockLastValue(
+              '${data['stock'].toString().toUpperCase()}.SA');
+        }
+
+        fiiData.add(FIIData(data['stock'].toString().toUpperCase(),
+            data['amount'].toInt().toString(), lastValue));
+      }
+
+      setState(() {});
+    }
+    _loadingControl(false);
   }
 
-   _loadingControl(bool bool) {
+  _loadingControl(bool bool) {
     setState(() {
       loading = bool;
     });
-   }
+  }
 }
 
 class FIIData {

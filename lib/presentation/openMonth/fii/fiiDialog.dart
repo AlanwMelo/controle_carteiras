@@ -7,7 +7,6 @@ class FIIDialog {
   showStockDialog(BuildContext context, Function(Stock) result) {
     TextEditingController paper = TextEditingController();
     TextEditingController amount = TextEditingController();
-    TextEditingController boughtValue = TextEditingController();
     TextEditingController lastValue = TextEditingController();
 
     lastLine() {
@@ -38,7 +37,7 @@ class FIIDialog {
                   result(Stock(
                       paper: paper.text,
                       amount: double.parse(amount.text),
-                      boughtValue: double.parse(boughtValue.text),
+                      boughtValue: 0,
                       lastValue: lastValue.text.isNotEmpty
                           ? double.parse(lastValue.text)
                           : null));
@@ -118,26 +117,6 @@ class FIIDialog {
                                   child: TextFormField(
                                     keyboardType: TextInputType.number,
                                     controller: amount,
-                                  )),
-                            )
-                          ],
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.all(12),
-                        child: Row(
-                          children: [
-                            const Text(
-                              'Compra: ',
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                            Expanded(
-                              child: SizedBox(
-                                  height: 25,
-                                  child: TextFormField(
-                                    controller: boughtValue,
-                                    keyboardType: TextInputType.number,
                                   )),
                             )
                           ],
