@@ -92,7 +92,7 @@ class _DocListState extends State<DocList> {
           ),
           itemBuilder: (context, index) {
             return InkWell(
-              onTap: () => _listTapTreatment(),
+              onTap: () => _listTapTreatment(gridList[index].text),
               child: Container(
                 margin: const EdgeInsets.all(12),
                 child: BeautifulContainer(
@@ -113,17 +113,17 @@ class _DocListState extends State<DocList> {
     );
   }
 
-  _listTapTreatment() async {
+  _listTapTreatment(String year) async {
     if (screenController == 0) {
       _loadController(true);
       gridList.clear();
 
       screenController = 1;
-      QuerySnapshot result = await DocManagement().getMonths('2024');
+      QuerySnapshot result = await DocManagement().getMonths(year);
 
-
-      for (var element in result.docs) {
-        gridList.add(GridList(text: element.id));
+      months = await _sortMonths(result.docs);
+      for (var element in months) {
+        gridList.add(GridList(text: element));
       }
 
       _loadController(false);
@@ -171,6 +171,48 @@ class _DocListState extends State<DocList> {
     });
   }
 
+  _sortMonths(List<QueryDocumentSnapshot<Object?>> docs) async {
+    List monthsToRemove = [
+      'Janeiro',
+      'Fevereiro',
+      'Março',
+      'Abril',
+      'Maio',
+      'Junho',
+      'Julho',
+      'Agosto',
+      'Setembro',
+      'Outubro',
+      'Novembro',
+      'Dezembro'
+    ];
+
+    List<String> monthsResult = [
+      'Janeiro',
+      'Fevereiro',
+      'Março',
+      'Abril',
+      'Maio',
+      'Junho',
+      'Julho',
+      'Agosto',
+      'Setembro',
+      'Outubro',
+      'Novembro',
+      'Dezembro'
+    ];
+
+    for (var doc in docs) {
+      if (monthsToRemove.contains(doc.id)) {
+        monthsToRemove.removeWhere((element) => element == doc.id);
+      }
+    }
+
+    for (var month in monthsToRemove) {
+      monthsResult.removeWhere((element) => month == element);
+    }
+    return monthsResult;
+  }
 }
 
 class GridList {
