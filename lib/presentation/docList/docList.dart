@@ -78,6 +78,21 @@ class _DocListState extends State<DocList> {
     );
   }
 
+  _loadYearsList() async {
+    _loadController(true);
+    QuerySnapshot result = await DocManagement().getDocuments();
+    for (var element in result.docs) {
+      yearsList.add(element.id);
+      gridList.add(GridList(text: element.id));
+    }
+    _loadController(false);
+  }
+
+  _loadController(bool bool) {
+    loading = bool;
+    setState(() {});
+  }
+
   _lists() {
     return SizedBox(
       height: 800,
@@ -130,45 +145,6 @@ class _DocListState extends State<DocList> {
     }
   }
 
-  _loadYearsList() async {
-    _loadController(true);
-    QuerySnapshot result = await DocManagement().getDocuments();
-    for (var element in result.docs) {
-      yearsList.add(element.id);
-      gridList.add(GridList(text: element.id));
-    }
-    _loadController(false);
-  }
-
-  Future<bool> _willPop() async {
-    if (screenController == 1) {
-      screenController = 0;
-      gridList.clear();
-      for (var element in yearsList) {
-        gridList.add(GridList(text: element));
-      }
-      setState(() {});
-      return false;
-    } else {
-      print('nop');
-      return false;
-    }
-  }
-
-  _loadController(bool bool) {
-    loading = bool;
-    setState(() {});
-  }
-
-  _newDoc() {
-    return NewDocDialog().showNewDocDialog(context, (result) async {
-      _loadController(true);
-      await DocManagement().createDoc(year: result[0], month: result[1]);
-      _loadController(false);
-      widget.result(result);
-    });
-  }
-
   _sortMonths(List<QueryDocumentSnapshot<Object?>> docs) async {
     List monthsToRemove = [
       'Janeiro',
@@ -210,6 +186,30 @@ class _DocListState extends State<DocList> {
       monthsResult.removeWhere((element) => month == element);
     }
     return monthsResult;
+  }
+
+  _newDoc() {
+    return NewDocDialog().showNewDocDialog(context, (result) async {
+      _loadController(true);
+      await DocManagement().createDoc(year: result[0], month: result[1]);
+      _loadController(false);
+      widget.result(result);
+    });
+  }
+
+  Future<bool> _willPop() async {
+    if (screenController == 1) {
+      screenController = 0;
+      gridList.clear();
+      for (var element in yearsList) {
+        gridList.add(GridList(text: element));
+      }
+      setState(() {});
+      return false;
+    } else {
+      print('nop');
+      return false;
+    }
   }
 }
 

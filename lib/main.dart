@@ -42,6 +42,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int screenController = 0;
   String title = 'Bem vindo Alan!';
+  String month = 'Junho';
+  String year = '2024';
 
   @override
   void initState() {
@@ -65,10 +67,13 @@ class _MyHomePageState extends State<MyHomePage> {
               children: [
                 Expanded(
                     child: screenController == 0
-                        ? const OpenMonth()
+                        ? OpenMonth(month: month, year: year)
                         : DocList(
                             result: (result) {
                               print(result);
+                              month = result[1];
+                              year = result[0];
+                              title = '${result[1]} de ${result[0]}';
                               screenController = 0;
                               setState(() {});
                             },

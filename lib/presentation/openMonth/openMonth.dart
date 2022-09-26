@@ -6,7 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:yahoo_finance_data_reader/yahoo_finance_data_reader.dart';
 
 class OpenMonth extends StatefulWidget {
-  const OpenMonth({super.key});
+  final String month;
+  final String year;
+
+  const OpenMonth({super.key, required this.month, required this.year});
 
   @override
   State<StatefulWidget> createState() => _OpenMonthState();
@@ -34,7 +37,9 @@ class _OpenMonthState extends State<OpenMonth> {
                 child: Column(
               children: [
                 Container(margin: myMargin, child: const Resume()),
-                Container(margin: myMargin, child: const StockList()),
+                Container(
+                    margin: myMargin,
+                    child: StockList(month: widget.month, year: widget.year)),
                 Container(margin: myMargin, child: const FIIReserva()),
               ],
             )),
@@ -50,8 +55,7 @@ class _OpenMonthState extends State<OpenMonth> {
             color: Colors.blue.withOpacity(0.7),
             border: Border(
                 bottom: BorderSide(
-                    width: 5, color: Colors.lightBlueAccent.withOpacity(0.2))
-            )),
+                    width: 5, color: Colors.lightBlueAccent.withOpacity(0.2)))),
         height: 90,
         child: Center(
           child: Column(
@@ -111,7 +115,8 @@ class _OpenMonthState extends State<OpenMonth> {
   }
 
   Future<void> _yfin() async {
-    List<dynamic> prices = await YahooFinanceDailyReader().getDailyData('OIBR3.SA');
+    List<dynamic> prices =
+        await YahooFinanceDailyReader().getDailyData('OIBR3.SA');
     print(prices[0]);
   }
 }

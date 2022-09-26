@@ -1,9 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:controle_carteiras/data/docManagement.dart';
 import 'package:controle_carteiras/presentation/container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class StockList extends StatefulWidget {
-  const StockList({super.key});
+  final String month;
+  final String year;
+
+  const StockList({super.key, required this.month, required this.year});
 
   @override
   State<StatefulWidget> createState() => _StockListState();
@@ -14,9 +19,7 @@ class _StockListState extends State<StockList> {
 
   @override
   void initState() {
-    stockData.add(StockData('VAL3', '12', '100', '112', '12%'));
-    stockData.add(StockData('VAL3', '12', '100', '112', '12%'));
-    stockData.add(StockData('VAL3', '12', '100', '112', '12%'));
+    _loadStocks();
     super.initState();
   }
 
@@ -109,6 +112,15 @@ class _StockListState extends State<StockList> {
 
   _horizontalDivisor() {
     return Container(width: 502, height: 0.5, color: Colors.black);
+  }
+
+  Future<void> _loadStocks() async {
+    QuerySnapshot stocksList =
+        await DocManagement().getStocks(widget.year, widget.month);
+
+    for (var stock in stocksList.docs) {
+      stockData.add(StockData('VAL3', '12', '100', '112', '12%'));
+    }
   }
 }
 

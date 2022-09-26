@@ -29,6 +29,16 @@ class DocManagement {
     return result;
   }
 
+  getStocks(String year, String month) async {
+    QuerySnapshot result = await _docs
+        .doc(year)
+        .collection('months')
+        .doc(month)
+        .collection('stocks')
+        .get();
+    return result;
+  }
+
   getMonths(String year) async {
     QuerySnapshot result = await _docs.doc(year).collection('months').get();
     return result;
