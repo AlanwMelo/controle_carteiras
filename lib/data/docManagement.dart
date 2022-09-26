@@ -43,7 +43,7 @@ class DocManagement {
   saveStock(Stock stock, String year, String month) async {
     Map<String, dynamic> data = {
       'updated': DateTime.now(),
-      'stock': stock.paper,
+      'stock': stock.paper.replaceAll(' ', ''),
       'amount': stock.amount,
       'boughtValue': stock.boughtValue,
       'lastValue': stock.lastValue,
@@ -54,6 +54,26 @@ class DocManagement {
         .collection('months')
         .doc(month)
         .collection('stocks')
+        .doc(stock.paper.toUpperCase())
+        .set(data);
+
+    return true;
+  }
+
+  saveFII(Stock stock, String year, String month) async {
+    Map<String, dynamic> data = {
+      'updated': DateTime.now(),
+      'stock': stock.paper,
+      'amount': stock.amount,
+      'boughtValue': stock.boughtValue,
+      'lastValue': stock.lastValue,
+    };
+
+    await _docs
+        .doc(year)
+        .collection('months')
+        .doc(month)
+        .collection('fii')
         .doc(stock.paper.toUpperCase())
         .set(data);
 

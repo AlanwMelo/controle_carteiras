@@ -7,7 +7,7 @@ class FinanceReader {
     List<dynamic> prices = await _yahooFinanceDailyReader.getDailyData(stock);
 
     if (prices.isNotEmpty) {
-      double price = prices[0]['open'];
+      double price = prices[0]['open'].toDouble();
       return price.toStringAsFixed(2);
     } else {
       return 'Error';

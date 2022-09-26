@@ -150,8 +150,7 @@ class _StockListState extends State<StockList> {
     return Container(width: 502, height: 0.5, color: Colors.black);
   }
 
-  Future<void> _loadStocks() async {
-    stockData.clear();
+  _loadStocks() async {
     _loadingControl(true);
     QuerySnapshot stocksList =
         await DocManagement().getStocks(widget.year, widget.month);
@@ -161,20 +160,24 @@ class _StockListState extends State<StockList> {
       String lastValue = data['lastValue'].toString();
       String dif = 'Error';
 
-      if (data['lastValue'] == null) {
-        lastValue = await financeReader
-            .getStockLastValue('${data['stock'].toString().toUpperCase()}.SA');
-      }
-      if (lastValue != 'Error') {
-        dif = _getDif(data['boughtValue'], lastValue);
-      }
+      if (stockData.indexWhere((element) =>
+              element.papel == data['stock'].toString().toUpperCase()) ==
+          -1) {
+        if (data['lastValue'] == null) {
+          lastValue = await financeReader.getStockLastValue(
+              '${data['stock'].toString().toUpperCase()}.SA');
+        }
+        if (lastValue != 'Error') {
+          dif = _getDif(data['boughtValue'], lastValue);
+        }
 
-      stockData.add(StockData(
-          data['stock'].toString().toUpperCase(),
-          data['amount'].toString(),
-          data['boughtValue'].toString(),
-          lastValue,
-          dif));
+        stockData.add(StockData(
+            data['stock'].toString().toUpperCase(),
+            data['amount'].toString(),
+            data['boughtValue'].toString(),
+            lastValue,
+            dif));
+      }
 
       setState(() {});
     }

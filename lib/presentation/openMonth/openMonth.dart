@@ -1,4 +1,4 @@
-import 'package:controle_carteiras/presentation/openMonth/FIIReserva.dart';
+import 'package:controle_carteiras/presentation/openMonth/fii/FIIReserva.dart';
 import 'package:controle_carteiras/presentation/openMonth/resume.dart';
 import 'package:controle_carteiras/presentation/openMonth/stock/stockList.dart';
 import 'package:flutter/cupertino.dart';
@@ -39,7 +39,9 @@ class _OpenMonthState extends State<OpenMonth> {
                 Container(
                     margin: myMargin,
                     child: StockList(month: widget.month, year: widget.year)),
-                Container(margin: myMargin, child: const FIIReserva()),
+                Container(
+                    margin: myMargin,
+                    child: FIIReserva(month: widget.month, year: widget.year)),
               ],
             )),
           ],
