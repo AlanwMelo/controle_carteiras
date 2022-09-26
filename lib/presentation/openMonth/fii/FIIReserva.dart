@@ -9,8 +9,13 @@ import 'package:flutter/material.dart';
 class FIIReserva extends StatefulWidget {
   final String month;
   final String year;
+  final Function(double) fiiAmount;
 
-  const FIIReserva({super.key, required this.month, required this.year});
+  const FIIReserva(
+      {super.key,
+      required this.month,
+      required this.year,
+      required this.fiiAmount});
 
   @override
   State<StatefulWidget> createState() => _FIIReservaState();
@@ -19,6 +24,7 @@ class FIIReserva extends StatefulWidget {
 class _FIIReservaState extends State<FIIReserva> {
   List<FIIData> fiiData = [];
   FinanceReader financeReader = FinanceReader();
+  double fiiAmount = 0;
   bool loading = false;
 
   @override
@@ -146,12 +152,15 @@ class _FIIReservaState extends State<FIIReserva> {
               '${data['stock'].toString().toUpperCase()}.SA');
         }
 
+        fiiAmount = fiiAmount + (data['amount'] * double.parse(lastValue));
+
         fiiData.add(FIIData(data['stock'].toString().toUpperCase(),
             data['amount'].toInt().toString(), lastValue));
       }
 
       setState(() {});
     }
+    widget.fiiAmount(fiiAmount);
     _loadingControl(false);
   }
 

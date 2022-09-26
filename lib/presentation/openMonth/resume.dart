@@ -28,17 +28,13 @@ class _ResumeState extends State<Resume> {
   int backupPercentage = 0;
 
   @override
-  void initState() {
+  build(BuildContext context) {
     profit = widget.finalValue - widget.initialValue;
     _calcReinvestAndProfit(
         initialValue: widget.initialValue,
         finalValue: widget.finalValue,
         backupAmount: widget.backupAmount);
-    super.initState();
-  }
 
-  @override
-  Widget build(BuildContext context) {
     return SizedBox(
       height: 180,
       child: Row(
@@ -150,7 +146,9 @@ class _ResumeState extends State<Resume> {
     double dif = initialValue - backupAmount;
     double percentage = 100 - (dif / initialValue * 100);
 
-    backupPercentage = percentage.toInt();
+    if (initialValue != 0 && backupAmount != 0) {
+      backupPercentage = percentage.toInt();
+    }
 
     if (profit > 0) {
       if (percentage >= 50) {
@@ -168,6 +166,5 @@ class _ResumeState extends State<Resume> {
     } else {
       sendToBackup = profit;
     }
-    setState(() {});
   }
 }

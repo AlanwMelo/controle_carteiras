@@ -60,7 +60,14 @@ class _OpenMonthState extends State<OpenMonth> {
                     )),
                 Container(
                     margin: myMargin,
-                    child: FIIReserva(month: widget.month, year: widget.year)),
+                    child: FIIReserva(
+                      month: widget.month,
+                      year: widget.year,
+                      fiiAmount: (amount) {
+                        backupAmount = amount;
+                        setState(() {});
+                      },
+                    )),
               ],
             )),
           ],
@@ -146,6 +153,9 @@ class _OpenMonthState extends State<OpenMonth> {
   _refreshResume(List<double> applicationsResume) {
     initialAmount = applicationsResume[0].toStringAsFixed(2);
     lastAmount = applicationsResume[1].toStringAsFixed(2);
+
+    initialDouble = applicationsResume[0];
+    finalDouble = applicationsResume[1];
 
     double dif = applicationsResume[1] - applicationsResume[0];
     double percentage = dif / applicationsResume[0] * 100;
