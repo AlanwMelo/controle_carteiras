@@ -71,13 +71,15 @@ class _StockListState extends State<StockList> {
                     _horizontalDivisor(),
                     InkWell(
                       onTap: () {},
-                      onLongPress: () {
+                      onLongPress: () async {
                         initialAmount = initialAmount -
                             double.parse(stockData[index].valorCompra) *
                                 double.parse(stockData[index].quantidade);
                         finalAmount = finalAmount -
                             double.parse(stockData[index].valorAtual) *
                                 double.parse(stockData[index].quantidade);
+                        await DocManagement().deleteStock(
+                            stockData[index].papel, widget.year, widget.month);
 
                         widget.applicationsResume([initialAmount, finalAmount]);
                         stockData.removeAt(index);

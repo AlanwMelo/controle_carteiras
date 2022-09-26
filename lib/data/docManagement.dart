@@ -70,6 +70,18 @@ class DocManagement {
     return true;
   }
 
+  deleteStock(String stock, String year, String month) async {
+    await _docs
+        .doc(year)
+        .collection('months')
+        .doc(month)
+        .collection('stocks')
+        .doc(stock.toUpperCase())
+        .delete();
+
+    return true;
+  }
+
   saveFII(Stock stock, String year, String month) async {
     Map<String, dynamic> data = {
       'updated': DateTime.now(),
