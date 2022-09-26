@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_carteiras/data/docManagement.dart';
 import 'package:controle_carteiras/presentation/container.dart';
+import 'package:controle_carteiras/presentation/openMonth/stockDialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -34,7 +35,7 @@ class _StockListState extends State<StockList> {
               paper: _leadingText(text: 'Papel'),
               amount: _leadingText(text: 'Qtd.'),
               boughtValue: _leadingText(text: 'Compra'),
-              actualPrice: _leadingText(text: 'Atual'),
+              actualPrice: _leadingText(text: 'Atual/Venda'),
               dif: _leadingText(text: 'Diferença')),
           ListView.builder(
               shrinkWrap: true,
@@ -60,7 +61,10 @@ class _StockListState extends State<StockList> {
   }
 
   _leadingText({required String text}) {
-    return Text(text, style: const TextStyle(fontWeight: FontWeight.bold));
+    return Text(
+        textAlign: TextAlign.center,
+        text,
+        style: const TextStyle(fontWeight: FontWeight.bold));
   }
 
   _stockLines(
@@ -104,7 +108,9 @@ class _StockListState extends State<StockList> {
       color: Colors.green,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-        onPressed: () {},
+        onPressed: () {
+          StockDialog().showStockDialog(context);
+        },
         child: const Text('Papeis do mês'),
       ),
     );
