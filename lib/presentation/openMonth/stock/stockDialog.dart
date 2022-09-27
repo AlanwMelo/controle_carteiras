@@ -36,7 +36,7 @@ class StockDialog {
               child: InkWell(
                 onTap: () {
                   result(Stock(
-                      paper: paper.text,
+                      paper: paper.text.replaceAll(' ', ''),
                       amount: double.parse(amount.text),
                       boughtValue: double.parse(boughtValue.text),
                       lastValue: lastValue.text.isNotEmpty

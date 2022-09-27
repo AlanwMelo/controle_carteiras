@@ -159,7 +159,7 @@ class _OpenMonthState extends State<OpenMonth> {
     double dif = applicationsResume[1] - applicationsResume[0];
     double percentage = dif / applicationsResume[0] * 100;
 
-    if (dif > 0) {
+    if (dif != 0) {
       amountDif = percentage.toStringAsFixed(0);
     } else {
       amountDif = '-';
