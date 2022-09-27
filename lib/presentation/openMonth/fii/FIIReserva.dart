@@ -56,9 +56,11 @@ class _FIIReservaState extends State<FIIReserva> {
                     InkWell(
                       onTap: () {},
                       onLongPress: () async {
-                        fiiAmount = fiiAmount -
-                            (double.parse(fiiData[index].quantidade) *
-                                double.parse(fiiData[index].valor));
+                        if (!fiiData[index].valor.contains("Error")) {
+                          fiiAmount = fiiAmount -
+                              (double.parse(fiiData[index].quantidade) *
+                                  double.parse(fiiData[index].valor));
+                        }
                         await DocManagement().deleteFII(
                             fiiData[index].papel, widget.year, widget.month);
                         widget.fiiAmount(fiiAmount);
@@ -164,7 +166,9 @@ class _FIIReservaState extends State<FIIReserva> {
               '${data['stock'].toString().toUpperCase()}.SA');
         }
 
-        fiiAmount = fiiAmount + (data['amount'] * double.parse(lastValue));
+        if (!lastValue.contains('Error')) {
+          fiiAmount = fiiAmount + (data['amount'] * double.parse(lastValue));
+        }
 
         fiiData.add(FIIData(data['stock'].toString().toUpperCase(),
             data['amount'].toInt().toString(), lastValue));

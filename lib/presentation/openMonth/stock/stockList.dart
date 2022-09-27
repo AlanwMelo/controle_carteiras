@@ -72,12 +72,15 @@ class _StockListState extends State<StockList> {
                     InkWell(
                       onTap: () {},
                       onLongPress: () async {
-                        initialAmount = initialAmount -
-                            double.parse(stockData[index].valorCompra) *
-                                double.parse(stockData[index].quantidade);
-                        finalAmount = finalAmount -
-                            double.parse(stockData[index].valorAtual) *
-                                double.parse(stockData[index].quantidade);
+                        if (!stockData[index].valorAtual.contains('Error')) {
+                          initialAmount = initialAmount -
+                              double.parse(stockData[index].valorCompra) *
+                                  double.parse(stockData[index].quantidade);
+
+                          finalAmount = finalAmount -
+                              double.parse(stockData[index].valorAtual) *
+                                  double.parse(stockData[index].quantidade);
+                        }
                         await DocManagement().deleteStock(
                             stockData[index].papel, widget.year, widget.month);
 
