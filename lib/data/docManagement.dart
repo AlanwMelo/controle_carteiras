@@ -126,6 +126,10 @@ class DocManagement {
   }
 
   deleteYear(String year) async {
+    QuerySnapshot helper = await _docs.doc(year).collection('months').get();
+    for (var element in helper.docs) {
+      _docs.doc(year).collection('months').doc(element.id).delete();
+    }
     await _docs.doc(year).delete();
 
     return true;
