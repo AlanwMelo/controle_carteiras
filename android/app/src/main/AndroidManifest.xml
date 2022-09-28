@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.controle_carteiras">
    <application
-        android:label="controle_carteiras"
+        android:label="Controle de Carteiras"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

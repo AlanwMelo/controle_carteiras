@@ -9,3 +9,5 @@ Também é possível criar uma planilha mensal que divide seus lucro em saldo a 
   - Se não houver lucro ele informa o valor a ser removido da reserva.
   
 Caso alguém tenha interesse em utilizar o projeto o APK está disponibilizado no repositório.
+
+Logo criado em: https://icons8.com.br/
