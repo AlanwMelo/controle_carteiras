@@ -184,7 +184,6 @@ class _FII extends State<FII> {
   }
 
   _loadFIIs() async {
-    int counter = 0;
     QuerySnapshot fiiList =
         await DocManagement().getFIIs(widget.year, widget.month);
 
@@ -216,13 +215,10 @@ class _FII extends State<FII> {
             data['boughtValue'].toString(),
             dif));
       }
-
-      counter = counter + 1;
-      if (counter == fiiData.length) {
-        widget.fiiAmount([fiiAmount, finalAmount]);
-        _loadingControl(false);
-      }
     }
+    fiiData.sort((a, b) => a.papel.compareTo(b.papel));
+    widget.fiiAmount([fiiAmount, finalAmount]);
+    _loadingControl(false);
   }
 
   _loadingControl(bool bool) {

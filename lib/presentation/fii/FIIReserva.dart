@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_carteiras/data/docManagement.dart';
 import 'package:controle_carteiras/data/financeReader.dart';
 import 'package:controle_carteiras/presentation/container.dart';
+import 'package:controle_carteiras/presentation/fii/FII.dart';
 import 'package:controle_carteiras/presentation/fii/fiiDialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ class FIIReserva extends StatefulWidget {
 }
 
 class _FIIReservaState extends State<FIIReserva> {
-  List<FIIData> fiiData = [];
+  List<FIIsData> fiiData = [];
   FinanceReader financeReader = FinanceReader();
   double fiiAmount = 0;
   bool loading = false;
@@ -54,7 +55,7 @@ class _FIIReservaState extends State<FIIReserva> {
                   children: [
                     _horizontalDivisor(),
                     InkWell(
-                      onTap: () {},
+                      onTap: () => _editItem(index),
                       onLongPress: () async {
                         if (!fiiData[index].valor.contains("Error")) {
                           fiiAmount = fiiAmount -
@@ -170,12 +171,13 @@ class _FIIReservaState extends State<FIIReserva> {
           fiiAmount = fiiAmount + (data['amount'] * double.parse(lastValue));
         }
 
-        fiiData.add(FIIData(data['stock'].toString().toUpperCase(),
-            data['amount'].toInt().toString(), lastValue));
+        fiiData.add(FIIsData(data['stock'].toString().toUpperCase(),
+            data['amount'].toInt().toString(), lastValue, '0', 'dif'));
       }
 
       setState(() {});
     }
+    fiiData.sort((a, b) => a.papel.compareTo(b.papel));
     widget.fiiAmount(fiiAmount);
     _loadingControl(false);
   }
@@ -185,12 +187,16 @@ class _FIIReservaState extends State<FIIReserva> {
       loading = bool;
     });
   }
-}
 
-class FIIData {
-  final String papel;
-  final String quantidade;
-  final String valor;
-
-  FIIData(this.papel, this.quantidade, this.valor);
+  _editItem(int index) {
+    FIIDialog(editing: true, fii: fiiData[index]).showStockDialog(context,
+        (res) async {
+      await DocManagement().saveFII(res, widget.year, widget.month);
+      fiiAmount = fiiAmount -
+          (double.parse(fiiData[index].valor) *
+              double.parse(fiiData[index].quantidade));
+      fiiData.removeAt(index);
+      _loadFIIs();
+    });
+  }
 }

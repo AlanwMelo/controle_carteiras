@@ -78,6 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               if (result.contains('resume')) {
                                 mainDoc = true;
                                 title = 'Bem vindo Alan!';
+                                lastTitle = title;
                               } else {
                                 mainDoc = false;
                                 month = result[1];
@@ -104,15 +105,23 @@ class _MyHomePageState extends State<MyHomePage> {
             body: Container(
               color: Colors.blue.withOpacity(0.7),
               child: Center(
-                child: GestureDetector(
+                child: InkWell(
                   onTap: () {
                     MyGoogleSignIn().signInWithGoogle();
                   },
-                  child: SizedBox(
-                      height: 250,
-                      width: 250,
-                      child: Image.network(
-                          'https://img2.gratispng.com/20180326/gte/kisspng-google-logo-g-suite-google-guava-google-plus-5ab8b5b15fd9f4.0166567715220545773927.jpg')),
+                  child: Card(
+                    elevation: 10,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: Container(
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                            color: Colors.white, shape: BoxShape.circle),
+                        height: 150,
+                        width: 150,
+                        child: Image.asset('lib/data/assets/logo-google.png')),
+                  ),
                 ),
               ),
             ),
