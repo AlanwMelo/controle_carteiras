@@ -234,6 +234,12 @@ class _StockListState extends State<StockList> {
     StockDialog(editing: true, stock: stockData[index]).showStockDialog(context,
         (res) async {
       await DocManagement().saveStock(res, widget.year, widget.month);
+      initialAmount = initialAmount -
+          (double.parse(stockData[index].valorCompra) *
+              double.parse(stockData[index].quantidade));
+      finalAmount = finalAmount -
+          (double.parse(stockData[index].valorAtual) *
+              double.parse(stockData[index].quantidade));
       stockData.removeAt(index);
       _loadStocks();
     });

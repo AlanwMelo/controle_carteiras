@@ -1,14 +1,27 @@
 import 'package:controle_carteiras/presentation/container.dart';
 import 'package:controle_carteiras/data/stock.dart';
+import 'package:controle_carteiras/presentation/fii/FII.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class FIIDialog {
+  final bool editing;
+  final FIIsData? fii;
+
+  FIIDialog({this.editing = false, this.fii});
+
   showStockDialog(BuildContext context, Function(Stock) result) {
     TextEditingController paper = TextEditingController();
     TextEditingController amount = TextEditingController();
     TextEditingController medium = TextEditingController();
     TextEditingController lastValue = TextEditingController();
+
+    if (editing) {
+      paper.text = fii!.papel;
+      amount.text = fii!.quantidade;
+      medium.text = fii!.medio;
+      lastValue.text = fii!.valor;
+    }
 
     lastLine() {
       return SizedBox(

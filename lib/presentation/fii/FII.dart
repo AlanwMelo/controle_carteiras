@@ -70,7 +70,7 @@ class _FII extends State<FII> {
                   children: [
                     _horizontalDivisor(),
                     InkWell(
-                      onTap: () {},
+                      onTap: () => _editItem(index),
                       onLongPress: () async {
                         if (!fiiData[index].valor.contains("Error")) {
                           fiiAmount = fiiAmount -
@@ -188,7 +188,7 @@ class _FII extends State<FII> {
     QuerySnapshot fiiList =
         await DocManagement().getFIIs(widget.year, widget.month);
 
-    fiiList.docs.forEach((fii) async {
+    for (var fii in fiiList.docs) {
       _loadingControl(true);
       Map data = fii.data() as Map;
       String lastValue = data['lastValue'].toString();
@@ -222,7 +222,7 @@ class _FII extends State<FII> {
         widget.fiiAmount([fiiAmount, finalAmount]);
         _loadingControl(false);
       }
-    });
+    }
   }
 
   _loadingControl(bool bool) {
@@ -236,6 +236,21 @@ class _FII extends State<FII> {
     double percentage = dif / originalValue * 100;
 
     return percentage.toStringAsFixed(2);
+  }
+
+  _editItem(int index) {
+    FIIDialog(editing: true, fii: fiiData[index]).showStockDialog(context,
+        (res) async {
+      await DocManagement().saveFII(res, widget.year, widget.month);
+      finalAmount = finalAmount -
+          (double.parse(fiiData[index].valor) *
+              double.parse(fiiData[index].quantidade));
+      fiiAmount = fiiAmount -
+          (double.parse(fiiData[index].medio) *
+              double.parse(fiiData[index].quantidade));
+      fiiData.removeAt(index);
+      _loadFIIs();
+    });
   }
 }
 
