@@ -1,3 +1,4 @@
+import 'package:controle_carteiras/data/formatText.dart';
 import 'package:controle_carteiras/presentation/container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -124,7 +125,7 @@ class _ResumeState extends State<Resume> {
               ),
               sizedBox,
               Text(
-                'R\$ ${value.toStringAsFixed(2)}',
+                '${FormatText().setValueTextCommas(value)}',
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -172,7 +173,7 @@ class _ResumeState extends State<Resume> {
       removeFromHighRisk = 0;
       removePercentage = 0;
       sendToBackup = profit;
-
     }
   }
+
 }

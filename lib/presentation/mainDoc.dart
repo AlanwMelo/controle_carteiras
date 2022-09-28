@@ -1,3 +1,4 @@
+import 'package:controle_carteiras/data/formatText.dart';
 import 'package:controle_carteiras/presentation/fii/FII.dart';
 import 'package:controle_carteiras/presentation/stock/stockList.dart';
 import 'package:flutter/material.dart';
@@ -71,8 +72,7 @@ class _MainDocState extends State<MainDoc> {
   }
 
   _mainInfo() {
-    initialAmount = (fiiInitialDouble + stockInitialDouble).toStringAsFixed(2);
-    lastAmount = (fiiFinalDouble + stockFinalDouble).toStringAsFixed(2);
+    setAmountText();
 
     difText() {
       Color textColor = Colors.greenAccent;
@@ -158,5 +158,13 @@ class _MainDocState extends State<MainDoc> {
       amountDif = '-';
     }
     setState(() {});
+  }
+
+  setAmountText() {
+    double initial = fiiInitialDouble + stockInitialDouble;
+    double last = fiiFinalDouble + stockFinalDouble;
+
+    initialAmount = FormatText().setValueTextCommas(initial);
+    lastAmount = FormatText().setValueTextCommas(last);
   }
 }

@@ -70,7 +70,7 @@ class _StockListState extends State<StockList> {
                   children: [
                     _horizontalDivisor(),
                     InkWell(
-                      onTap: () {},
+                      onTap: () => _editItem(index),
                       onLongPress: () async {
                         if (!stockData[index].valorAtual.contains('Error')) {
                           initialAmount = initialAmount -
@@ -210,6 +210,7 @@ class _StockListState extends State<StockList> {
             dif));
       }
 
+      stockData.sort((a, b) => a.papel.compareTo(b.papel));
       setState(() {});
     }
     widget.applicationsResume([initialAmount, finalAmount]);
@@ -227,6 +228,15 @@ class _StockListState extends State<StockList> {
     double percentage = dif / originalValue * 100;
 
     return percentage.toStringAsFixed(2);
+  }
+
+  _editItem(int index) {
+    StockDialog(editing: true, stock: stockData[index]).showStockDialog(context,
+        (res) async {
+      await DocManagement().saveStock(res, widget.year, widget.month);
+      stockData.removeAt(index);
+      _loadStocks();
+    });
   }
 }
 

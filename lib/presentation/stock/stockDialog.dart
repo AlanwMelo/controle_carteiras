@@ -1,14 +1,27 @@
 import 'package:controle_carteiras/presentation/container.dart';
 import 'package:controle_carteiras/data/stock.dart';
+import 'package:controle_carteiras/presentation/stock/stockList.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class StockDialog {
+  final bool editing;
+  final StockData? stock;
+
+  StockDialog({this.editing = false, this.stock});
+
   showStockDialog(BuildContext context, Function(Stock) result) {
     TextEditingController paper = TextEditingController();
     TextEditingController amount = TextEditingController();
     TextEditingController boughtValue = TextEditingController();
     TextEditingController lastValue = TextEditingController();
+
+    if (editing) {
+      paper.text = stock!.papel;
+      amount.text = stock!.quantidade;
+      boughtValue.text = stock!.valorCompra;
+      lastValue.text = stock!.valorAtual;
+    }
 
     lastLine() {
       return SizedBox(

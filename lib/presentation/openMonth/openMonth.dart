@@ -1,3 +1,4 @@
+import 'package:controle_carteiras/data/formatText.dart';
 import 'package:controle_carteiras/presentation/fii/FIIReserva.dart';
 import 'package:controle_carteiras/presentation/openMonth/resume.dart';
 import 'package:controle_carteiras/presentation/stock/stockList.dart';
@@ -150,8 +151,9 @@ class _OpenMonthState extends State<OpenMonth> {
   }
 
   _refreshResume(List<double> applicationsResume) {
-    initialAmount = applicationsResume[0].toStringAsFixed(2);
-    lastAmount = applicationsResume[1].toStringAsFixed(2);
+
+    initialAmount = FormatText().setValueTextCommas(applicationsResume[0]);
+    lastAmount = FormatText().setValueTextCommas(applicationsResume[1]);
 
     initialDouble = applicationsResume[0];
     finalDouble = applicationsResume[1];
