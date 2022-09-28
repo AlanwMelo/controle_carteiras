@@ -68,6 +68,29 @@ class _DocListState extends State<DocList> {
                       )),
                     ),
                   ),
+                  InkWell(
+                    onTap: () {
+                      _listTapTreatment('resume');
+                    },
+                    onLongPress: () {},
+                    child: Container(
+                      margin:
+                          const EdgeInsets.only(top: 12, right: 12, left: 12),
+                      height: 40,
+                      child: BeautifulContainer(
+                          color: Colors.lightBlueAccent.withOpacity(0.5),
+                          child: Container(
+                              color: Colors.lightBlueAccent.withOpacity(0.2),
+                              child: const Center(
+                                  child: Text(
+                                'Principal',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              )))),
+                    ),
+                  ),
                   _lists(),
                 ],
               ),
@@ -82,8 +105,10 @@ class _DocListState extends State<DocList> {
     _loadController(true);
     QuerySnapshot result = await DocManagement().getDocuments();
     for (var element in result.docs) {
-      yearsList.add(element.id);
-      gridList.add(GridList(text: element.id));
+      if (element.id != 'resume') {
+        yearsList.add(element.id);
+        gridList.add(GridList(text: element.id));
+      }
     }
     _loadController(false);
   }
@@ -105,6 +130,7 @@ class _DocListState extends State<DocList> {
           itemBuilder: (context, index) {
             return InkWell(
               onTap: () => _listTapTreatment(gridList[index].text),
+              onLongPress: () => _deleteListItem(gridList[index].text, index),
               child: Container(
                 margin: const EdgeInsets.all(12),
                 child: BeautifulContainer(
@@ -126,7 +152,9 @@ class _DocListState extends State<DocList> {
   }
 
   _listTapTreatment(String text) async {
-    if (screenController == 0) {
+    if (text == 'resume') {
+      widget.result([text, '0']);
+    } else if (screenController == 0) {
       selectedYear = text;
       _loadController(true);
       gridList.clear();
@@ -210,6 +238,17 @@ class _DocListState extends State<DocList> {
       print('nop');
       return false;
     }
+  }
+
+  _deleteListItem(String text, int index) {
+    if (months.contains(text)) {
+      DocManagement().deleteMonth(selectedYear, text);
+      gridList.removeAt(index);
+    } else {
+      DocManagement().deleteYear(text);
+      gridList.removeAt(index);
+    }
+    setState(() {});
   }
 }
 

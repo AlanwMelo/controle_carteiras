@@ -118,4 +118,16 @@ class DocManagement {
     QuerySnapshot result = await _docs.doc(year).collection('months').get();
     return result;
   }
+
+  deleteMonth(String year, String month) async {
+    await _docs.doc(year).collection('months').doc(month).delete();
+
+    return true;
+  }
+
+  deleteYear(String year) async {
+    await _docs.doc(year).delete();
+
+    return true;
+  }
 }

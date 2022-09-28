@@ -44,6 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int screenController = 0;
   bool mainDoc = true;
   String title = 'Bem vindo Alan!';
+  String lastTitle = 'Bem vindo Alan!';
   String month = 'Junho';
   String year = '2024';
 
@@ -74,11 +75,19 @@ class _MyHomePageState extends State<MyHomePage> {
                             : OpenMonth(month: month, year: year)
                         : DocList(
                             result: (result) {
-                              month = result[1];
-                              year = result[0];
-                              title = '${result[1]} de ${result[0]}';
-                              screenController = 0;
-                              setState(() {});
+                              if (result.contains('resume')) {
+                                mainDoc = true;
+                                title = 'Bem vindo Alan!';
+                              } else {
+                                mainDoc = false;
+                                month = result[1];
+                                year = result[0];
+                                title = '${result[1]} de ${result[0]}';
+                                lastTitle = title;
+                              }
+                              setState(() {
+                                screenController = 0;
+                              });
                             },
                           )),
                 _bottomBar(),
@@ -120,8 +129,8 @@ class _MyHomePageState extends State<MyHomePage> {
           Expanded(
             child: InkWell(
               onTap: () {
+                title = lastTitle;
                 screenController = 0;
-                title = 'Relatório Setembro 2022';
                 setState(() {});
               },
               child: const Icon(Icons.auto_graph_rounded, color: Colors.white),
