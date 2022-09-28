@@ -7,6 +7,7 @@ class FIIDialog {
   showStockDialog(BuildContext context, Function(Stock) result) {
     TextEditingController paper = TextEditingController();
     TextEditingController amount = TextEditingController();
+    TextEditingController medium = TextEditingController();
     TextEditingController lastValue = TextEditingController();
 
     lastLine() {
@@ -35,9 +36,9 @@ class FIIDialog {
               child: InkWell(
                 onTap: () {
                   result(Stock(
-                      paper: paper.text,
+                      paper: paper.text.replaceAll(' ', ''),
                       amount: double.parse(amount.text),
-                      boughtValue: 0,
+                      boughtValue: double.parse(medium.text),
                       lastValue: lastValue.text.isNotEmpty
                           ? double.parse(lastValue.text)
                           : null));
@@ -127,7 +128,27 @@ class FIIDialog {
                         child: Row(
                           children: [
                             const Text(
-                              'Valor final: ',
+                              'Médio: ',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            Expanded(
+                              child: SizedBox(
+                                  height: 25,
+                                  child: TextFormField(
+                                    controller: medium,
+                                    keyboardType: TextInputType.number,
+                                  )),
+                            )
+                          ],
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.all(12),
+                        child: Row(
+                          children: [
+                            const Text(
+                              'Final: ',
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),
                             ),

@@ -2,35 +2,35 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_carteiras/data/docManagement.dart';
 import 'package:controle_carteiras/data/financeReader.dart';
 import 'package:controle_carteiras/presentation/container.dart';
-import 'package:controle_carteiras/presentation/openMonth/stock/stockDialog.dart';
+import 'package:controle_carteiras/presentation/fii/fiiDialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class StockList extends StatefulWidget {
+class FII extends StatefulWidget {
   final String month;
   final String year;
-  final Function(List<double>) applicationsResume;
+  final Function(List<double>) fiiAmount;
 
-  const StockList(
+  const FII(
       {super.key,
       required this.month,
       required this.year,
-      required this.applicationsResume});
+      required this.fiiAmount});
 
   @override
-  State<StatefulWidget> createState() => _StockListState();
+  State<StatefulWidget> createState() => _FII();
 }
 
-class _StockListState extends State<StockList> {
-  double initialAmount = 0;
+class _FII extends State<FII> {
+  List<FIIsData> fiiData = [];
+  FinanceReader financeReader = FinanceReader();
+  double fiiAmount = 0;
   double finalAmount = 0;
   bool loading = false;
-  FinanceReader financeReader = FinanceReader();
-  List<StockData> stockData = [];
 
   @override
   void initState() {
-    _loadStocks();
+    _loadFIIs();
     super.initState();
   }
 
@@ -44,25 +44,25 @@ class _StockListState extends State<StockList> {
           _stockLines(
               paper: _leadingText(text: 'Papel'),
               amount: _leadingText(text: 'Qtd.'),
-              boughtValue: _leadingText(text: 'Compra'),
-              actualPrice: _leadingText(text: 'Atual/Venda'),
-              dif: _leadingText(text: 'Diferença')),
+              actualPrice: _leadingText(text: 'Atual'),
+              mediumPrice: _leadingText(text: 'Preço\nMédio'),
+              dif: _leadingText(text: 'Dif')),
           ListView.builder(
               shrinkWrap: true,
-              itemCount: stockData.length,
+              itemCount: fiiData.length,
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
                 difText() {
-                  if (stockData[index].dif != 'Error') {
-                    double value = double.parse(stockData[index].dif);
+                  if (fiiData[index].dif != 'Error') {
+                    double value = double.parse(fiiData[index].dif);
 
                     return Text(
-                      '${stockData[index].dif}%',
+                      '${fiiData[index].dif}%',
                       style: TextStyle(
                           color: value < 0 ? Colors.redAccent : Colors.black),
                     );
                   } else {
-                    return Text(stockData[index].dif);
+                    return Text(fiiData[index].dif);
                   }
                 }
 
@@ -72,28 +72,27 @@ class _StockListState extends State<StockList> {
                     InkWell(
                       onTap: () {},
                       onLongPress: () async {
-                        if (!stockData[index].valorAtual.contains('Error')) {
-                          initialAmount = initialAmount -
-                              double.parse(stockData[index].valorCompra) *
-                                  double.parse(stockData[index].quantidade);
+                        if (!fiiData[index].valor.contains("Error")) {
+                          fiiAmount = fiiAmount -
+                              (double.parse(fiiData[index].quantidade) *
+                                  double.parse(fiiData[index].medio));
 
                           finalAmount = finalAmount -
-                              double.parse(stockData[index].valorAtual) *
-                                  double.parse(stockData[index].quantidade);
+                              (double.parse(fiiData[index].quantidade) *
+                                  double.parse(fiiData[index].valor));
                         }
-                        await DocManagement().deleteStock(
-                            stockData[index].papel, widget.year, widget.month);
-
-                        widget.applicationsResume([initialAmount, finalAmount]);
-                        stockData.removeAt(index);
+                        await DocManagement().deleteFII(
+                            fiiData[index].papel, widget.year, widget.month);
+                        widget.fiiAmount([fiiAmount, finalAmount]);
+                        fiiData.removeAt(index);
                       },
                       child: _stockLines(
-                          paper: Text(stockData[index].papel),
-                          amount: Text(stockData[index].quantidade),
-                          boughtValue: Text(stockData[index].valorCompra),
-                          actualPrice:
-                              Center(child: Text(stockData[index].valorAtual)),
-                          dif: difText()),
+                        paper: Text(fiiData[index].papel),
+                        amount: Text(fiiData[index].quantidade),
+                        actualPrice: Center(child: Text(fiiData[index].valor)),
+                        mediumPrice: Text(fiiData[index].medio),
+                        dif: difText(),
+                      ),
                     )
                   ],
                 );
@@ -104,41 +103,49 @@ class _StockListState extends State<StockList> {
   }
 
   _leadingText({required String text}) {
-    return Text(
+    return Text(text,
         textAlign: TextAlign.center,
-        text,
         style: const TextStyle(fontWeight: FontWeight.bold));
   }
 
-  _stockLines(
-      {required Widget paper,
-      required Widget amount,
-      required Widget boughtValue,
-      required Widget actualPrice,
-      required Widget dif}) {
+  _stockLines({
+    required Widget paper,
+    required Widget amount,
+    required Widget mediumPrice,
+    required Widget actualPrice,
+    required Widget dif,
+  }) {
+    double columnWidth = 100;
     Widget divisor = Container(width: 0.5, color: Colors.black);
 
     rows({required Widget child}) {
       return Expanded(
         child: Container(
             color: Colors.lightBlueAccent.withOpacity(0.2),
+            width: columnWidth,
             child: Center(child: child)),
       );
     }
 
     return SizedBox(
       height: 40,
-      child: Row(
+      child: Column(
         children: [
-          rows(child: paper),
-          divisor,
-          rows(child: amount),
-          divisor,
-          rows(child: boughtValue),
-          divisor,
-          rows(child: actualPrice),
-          divisor,
-          rows(child: dif),
+          Expanded(
+            child: Row(
+              children: [
+                rows(child: paper),
+                divisor,
+                rows(child: amount),
+                divisor,
+                rows(child: mediumPrice),
+                divisor,
+                rows(child: actualPrice),
+                divisor,
+                rows(child: dif),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -161,13 +168,13 @@ class _StockListState extends State<StockList> {
           : ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
               onPressed: () {
-                StockDialog().showStockDialog(context, (res) async {
-                  await DocManagement()
-                      .saveStock(res, widget.year, widget.month);
-                  _loadStocks();
+                FIIDialog().showStockDialog(context, (res) async {
+                  await DocManagement().saveFII(res, widget.year, widget.month);
+                  _loadFIIs();
                 });
+                setState(() {});
               },
-              child: const Text('Papeis do mês'),
+              child: const Text('FIIs'),
             ),
     );
   }
@@ -176,44 +183,46 @@ class _StockListState extends State<StockList> {
     return Container(width: 502, height: 0.5, color: Colors.black);
   }
 
-  _loadStocks() async {
-    _loadingControl(true);
-    QuerySnapshot stocksList =
-        await DocManagement().getStocks(widget.year, widget.month);
+  _loadFIIs() async {
+    int counter = 0;
+    QuerySnapshot fiiList =
+        await DocManagement().getFIIs(widget.year, widget.month);
 
-    for (var stock in stocksList.docs) {
-      Map data = stock.data() as Map;
+    fiiList.docs.forEach((fii) async {
+      _loadingControl(true);
+      Map data = fii.data() as Map;
       String lastValue = data['lastValue'].toString();
       String dif = 'Error';
 
-      if (stockData.indexWhere((element) =>
+      if (fiiData.indexWhere((element) =>
               element.papel == data['stock'].toString().toUpperCase()) ==
           -1) {
         if (data['lastValue'] == null) {
           lastValue = await financeReader.getStockLastValue(
               '${data['stock'].toString().toUpperCase()}.SA');
         }
-        if (lastValue != 'Error') {
-          dif = _getDif(data['boughtValue'], lastValue);
 
-          initialAmount =
-              initialAmount + (data['amount'] * data['boughtValue']);
+        if (!lastValue.contains('Error')) {
+          dif = _getDif(data['boughtValue'], lastValue);
+          fiiAmount = fiiAmount + (data['amount'] * data['boughtValue']);
           finalAmount =
               finalAmount + (data['amount'] * double.parse(lastValue));
         }
 
-        stockData.add(StockData(
+        fiiData.add(FIIsData(
             data['stock'].toString().toUpperCase(),
             data['amount'].toInt().toString(),
-            data['boughtValue'].toString(),
             lastValue,
+            data['boughtValue'].toString(),
             dif));
       }
 
-      setState(() {});
-    }
-    widget.applicationsResume([initialAmount, finalAmount]);
-    _loadingControl(false);
+      counter = counter + 1;
+      if (counter == fiiData.length) {
+        widget.fiiAmount([fiiAmount, finalAmount]);
+        _loadingControl(false);
+      }
+    });
   }
 
   _loadingControl(bool bool) {
@@ -230,13 +239,12 @@ class _StockListState extends State<StockList> {
   }
 }
 
-class StockData {
+class FIIsData {
   final String papel;
   final String quantidade;
-  final String valorCompra;
-  final String valorAtual;
+  final String valor;
+  final String medio;
   final String dif;
 
-  StockData(
-      this.papel, this.quantidade, this.valorCompra, this.valorAtual, this.dif);
+  FIIsData(this.papel, this.quantidade, this.valor, this.medio, this.dif);
 }

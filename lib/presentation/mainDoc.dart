@@ -1,26 +1,24 @@
-import 'package:controle_carteiras/presentation/fii/FIIReserva.dart';
-import 'package:controle_carteiras/presentation/openMonth/resume.dart';
+import 'package:controle_carteiras/presentation/fii/FII.dart';
 import 'package:controle_carteiras/presentation/stock/stockList.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class OpenMonth extends StatefulWidget {
-  final String month;
-  final String year;
-
-  const OpenMonth({super.key, required this.month, required this.year});
+class MainDoc extends StatefulWidget {
+  const MainDoc({super.key});
 
   @override
-  State<StatefulWidget> createState() => _OpenMonthState();
+  State<StatefulWidget> createState() => _MainDocState();
 }
 
-class _OpenMonthState extends State<OpenMonth> {
+class _MainDocState extends State<MainDoc> {
   String initialAmount = '-';
   String lastAmount = '-';
   String amountDif = '-';
   double initialDouble = 0;
   double finalDouble = 0;
-  double backupAmount = 0;
+  double fiiFinalDouble = 0;
+  double fiiInitialDouble = 0;
+  double stockFinalDouble = 0;
+  double stockInitialDouble = 0;
 
   @override
   void initState() {
@@ -43,27 +41,24 @@ class _OpenMonthState extends State<OpenMonth> {
               children: [
                 Container(
                     margin: myMargin,
-                    child: Resume(
-                      initialValue: initialDouble,
-                      finalValue: finalDouble,
-                      backupAmount: backupAmount,
-                    )),
-                Container(
-                    margin: myMargin,
                     child: StockList(
-                      month: widget.month,
-                      year: widget.year,
+                      month: '0',
+                      year: 'resume',
                       applicationsResume: (applicationsResume) {
-                        _refreshResume(applicationsResume);
+                        stockInitialDouble = applicationsResume[0];
+                        stockFinalDouble = applicationsResume[1];
+                        _refreshResume();
                       },
                     )),
                 Container(
                     margin: myMargin,
-                    child: FIIReserva(
-                      month: widget.month,
-                      year: widget.year,
+                    child: FII(
+                      month: '0',
+                      year: 'resume',
                       fiiAmount: (amount) {
-                        backupAmount = amount;
+                        fiiInitialDouble = amount[0];
+                        fiiFinalDouble = amount[1];
+                        _refreshResume();
                         setState(() {});
                       },
                     )),
@@ -76,6 +71,9 @@ class _OpenMonthState extends State<OpenMonth> {
   }
 
   _mainInfo() {
+    initialAmount = (fiiInitialDouble + stockInitialDouble).toStringAsFixed(2);
+    lastAmount = (fiiFinalDouble + stockFinalDouble).toStringAsFixed(2);
+
     difText() {
       Color textColor = Colors.greenAccent;
       if (amountDif != '-') {
@@ -149,15 +147,10 @@ class _OpenMonthState extends State<OpenMonth> {
         ));
   }
 
-  _refreshResume(List<double> applicationsResume) {
-    initialAmount = applicationsResume[0].toStringAsFixed(2);
-    lastAmount = applicationsResume[1].toStringAsFixed(2);
-
-    initialDouble = applicationsResume[0];
-    finalDouble = applicationsResume[1];
-
-    double dif = applicationsResume[1] - applicationsResume[0];
-    double percentage = dif / applicationsResume[0] * 100;
+  _refreshResume() {
+    double dif = (fiiFinalDouble + stockFinalDouble) -
+        (fiiInitialDouble + stockInitialDouble);
+    double percentage = dif / (fiiInitialDouble + stockInitialDouble) * 100;
 
     if (dif != 0) {
       amountDif = percentage.toStringAsFixed(0);

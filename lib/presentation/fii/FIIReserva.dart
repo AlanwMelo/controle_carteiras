@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_carteiras/data/docManagement.dart';
 import 'package:controle_carteiras/data/financeReader.dart';
 import 'package:controle_carteiras/presentation/container.dart';
-import 'package:controle_carteiras/presentation/openMonth/fii/fiiDialog.dart';
+import 'package:controle_carteiras/presentation/fii/fiiDialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

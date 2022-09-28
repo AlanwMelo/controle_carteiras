@@ -1,5 +1,6 @@
 import 'package:controle_carteiras/data/googleSignIn.dart';
 import 'package:controle_carteiras/presentation/docList/docList.dart';
+import 'package:controle_carteiras/presentation/mainDoc.dart';
 import 'package:controle_carteiras/presentation/openMonth/openMonth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -41,6 +42,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int screenController = 0;
+  bool mainDoc = true;
   String title = 'Bem vindo Alan!';
   String month = 'Junho';
   String year = '2024';
@@ -67,10 +69,11 @@ class _MyHomePageState extends State<MyHomePage> {
               children: [
                 Expanded(
                     child: screenController == 0
-                        ? OpenMonth(month: month, year: year)
+                        ? mainDoc
+                            ? const MainDoc()
+                            : OpenMonth(month: month, year: year)
                         : DocList(
                             result: (result) {
-                              print(result);
                               month = result[1];
                               year = result[0];
                               title = '${result[1]} de ${result[0]}';
