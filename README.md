@@ -8,6 +8,6 @@ Também é possível criar uma planilha mensal que divide seus lucro em saldo a 
   - Se o saldo da reserva for maior que 25% do total investido: lucro 25%, reserva 25%, reinvestir 50%.
   - Se não houver lucro ele informa o valor a ser removido da reserva.
   
-Caso alguém tenha interesse em utilizar o projeto o APK está disponibilizado no repositório.
+Caso alguém tenha interesse em utilizar o projeto o APK está disponibilizado no repositório, o login pode ser efetuado com o google e suas informações ficarão salvas no firebase.
 
 Logo criado em: https://icons8.com.br/
